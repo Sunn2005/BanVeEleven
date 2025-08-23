@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 import connectDB.ConnectDB;
 import entity.Ca;
+import entity.TaiKhoan;
+
+import javax.swing.*;
 
 public class Ca_DAO {
 	ArrayList<Ca> dsCa;
@@ -102,8 +105,34 @@ public class Ca_DAO {
 
 		return ca;
 	}
-		
+
 	public void reset() {
 		dsCa.removeAll(dsCa);
+	}
+
+	public void vaoCa(TaiKhoan taiKhoan, String maCa) {
+		int phanQuyen = taiKhoan.getPhanQuyen();
+		LocalTime currentTime = LocalTime.now();
+		Ca_DAO caDAO = new Ca_DAO();
+		Ca ca = caDAO.getCaTheoMaCa(maCa);
+
+		if (ca == null) {
+			JOptionPane.showMessageDialog(null, "Ca làm việc không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (phanQuyen == 1) {
+			// Quản lý: Cho phép vào bất kỳ ca nào
+			JOptionPane.showMessageDialog(null, "Quản lý đã vào ca: " + ca.getTenCa(), "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		} else if (phanQuyen == 2) {
+			// Nhân viên: Kiểm tra thời gian làm việc
+			if (currentTime.isAfter(ca.getThoiGianBatDau()) && currentTime.isBefore(ca.getThoiGianKetThuc())) {
+				JOptionPane.showMessageDialog(null, "Nhân viên đã vào ca: " + ca.getTenCa(), "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(null, "Bạn chỉ có thể vào ca trong thời gian làm việc!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Phân quyền không hợp lệ!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

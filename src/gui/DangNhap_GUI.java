@@ -64,7 +64,7 @@ public class DangNhap_GUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 905, 600);
 		setLocationRelativeTo(null);
-		setTitle("Quản lý nhà ga ĐTHP");
+		setTitle("Quản lý nhà ga Eleven");
 		setResizable(false);
 
 		contentPane = new JPanel() {
@@ -96,8 +96,8 @@ public class DangNhap_GUI extends JFrame {
 		});
 
 		// Logo
-		ImageIcon originalLogo = new ImageIcon(getClass().getResource("/img/LogoDepHonTrang.png"));
-		Image scaledLogo = originalLogo.getImage().getScaledInstance(300, 120, Image.SCALE_SMOOTH); 
+		ImageIcon originalLogo = new ImageIcon(getClass().getResource("/img/Logo_eleven_trang.png"));
+		Image scaledLogo = originalLogo.getImage().getScaledInstance(350, 220, Image.SCALE_SMOOTH);
 																									
 		JLabel logoLabel = new JLabel(new ImageIcon(scaledLogo));
 		logoLabel.setBounds(284, 66, 300, 120); // Cập nhật kích thước trên JLabel
@@ -294,7 +294,7 @@ public class DangNhap_GUI extends JFrame {
 		contentPane.add(lblQuenMK);
 
 		// Footer
-		JLabel lblFooter = new JLabel("ĐTHP | Group 5 | DHKTPM18ATT - 422000422703");
+		JLabel lblFooter = new JLabel("Eleven | Group 11 | DHKTPM19BTT - 422000422704");
 		lblFooter.setBounds(305, 532, 316, 21);
 		lblFooter.setForeground(Color.WHITE);
 		lblFooter.setFont(new Font("Arial", Font.PLAIN, 13));

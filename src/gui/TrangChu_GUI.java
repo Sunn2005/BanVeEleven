@@ -116,7 +116,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Ngăn đóng cửa sổ trực tiếp
 		setBounds(100, 100, 1480, 810);
 		setLocationRelativeTo(null);
-		setTitle("Quản lý nhà ga ĐTHP");
+		setTitle("Quản lý nhà ga Eleven");
 		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -166,7 +166,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		title.setLayout(null);
 		
 		//Logo chương trình
-		ImageIcon originalLogo = new ImageIcon(getClass().getResource("/img/LogoDepHonTrang.png"));
+		ImageIcon originalLogo = new ImageIcon(getClass().getResource("/img/Logo_eleven_trang.png"));
 	    Image scaledLogo = originalLogo.getImage().getScaledInstance(300, 120, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 	    logoLabel = new JLabel(new ImageIcon(scaledLogo));
 	    logoLabel.addMouseListener(new MouseAdapter() {
@@ -193,7 +193,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    title.add(logoLabel);
 	    
 	    // Tên Chương trình
-	    titleLabel = new JLabel("Nhà ga ĐTHP");
+	    titleLabel = new JLabel("Nhà ga Eleven");
 	    titleLabel.setForeground(SystemColor.text);
 	    titleLabel.setBounds(328, 0, 876, 145);
 	    titleLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -501,35 +501,90 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    		contentPane1.add(btn_VaoCa);
 	    		
 	    		btn_VaoCa.addActionListener(new ActionListener() {
-	    			
-	    			@Override
-	    			public void actionPerformed(ActionEvent e) {
-	    				// TODO Auto-generated method stub
-	    				// Hiển thị hộp thoại xác nhận sau khi mở file
-	    				LocalDateTime currentTime = LocalDateTime.now();
-	    				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	    				String time= currentTime.format(formatter);
-	                    int confirm = JOptionPane.showConfirmDialog(
-	                        null, 
-	                        "Bắt đầu ca làm :" + time, 
-	                        "Xác nhận", 
-	                        JOptionPane.YES_NO_OPTION
-	                    );
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// Lấy thời gian hiện tại
+					LocalDateTime currentTime = LocalDateTime.now();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+					String time = currentTime.format(formatter);
 
-	                    // Xóa file nếu người dùng chọn "Yes"
-	                    if (confirm == JOptionPane.YES_OPTION) {
-	                        if (kiemTraVaoCaLam(lbl_ThongTinNV, currentTime)) {
-	                            vaoCa= LocalDateTime.now();;
-	                            click = true;
-	                            dialog.dispose();
-	                        } else {
-	                        	JOptionPane.showMessageDialog(null, "Chưa tới thời gian làm viêc", "Thông báo", JOptionPane.WARNING_MESSAGE);
-	                        }
-	                    }else {
-	                    	return;
-	                    }
-	    			}
-	    		});
+					// Hiển thị hộp thoại xác nhận
+					int confirm = JOptionPane.showConfirmDialog(
+						null,
+						"Bắt đầu ca làm: " + time,
+						"Xác nhận",
+						JOptionPane.YES_NO_OPTION
+					);
+
+					if (confirm == JOptionPane.YES_OPTION) {
+						// Lấy tài khoản đăng nhập hiện tại
+						TaiKhoan taiKhoan = dangNhap.getTaiKhoanLogined();
+
+						// Lấy mã ca làm việc từ thông tin nhân viên
+						String maCa = nhanVien_DAO.getNhanVienTheoMaNV(taiKhoan.getNhanVien().getMaNV()).getCa().getMaCa();
+
+						// Gọi hàm vaoCa để xử lý logic
+						Ca ca = ca_DAO.getCaTheoMaCa(maCa);
+						if (ca == null) {
+							JOptionPane.showMessageDialog(null, "Ca làm việc không tồn tại!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+
+						int phanQuyen = taiKhoan.getPhanQuyen();
+						LocalTime currentTimeOnly = currentTime.toLocalTime();
+
+						if (phanQuyen == 1) {
+							// Quản lý: Cho phép vào bất kỳ ca nào
+							vaoCa = currentTime;
+							click = true;
+							JOptionPane.showMessageDialog(null, "Quản lý đã vào ca: " + ca.getTenCa(), "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+							dialog.dispose();
+						} else if (phanQuyen == 2) {
+							// Nhân viên: Kiểm tra thời gian làm việc
+							if (currentTimeOnly.isAfter(ca.getThoiGianBatDau()) && currentTimeOnly.isBefore(ca.getThoiGianKetThuc())) {
+								vaoCa = currentTime;
+								click = true;
+								JOptionPane.showMessageDialog(null, "Nhân viên đã vào ca: " + ca.getTenCa(), "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+								dialog.dispose();
+							} else {
+								JOptionPane.showMessageDialog(null, "Chưa tới thời gian làm việc!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+							}
+						} else {
+							JOptionPane.showMessageDialog(null, "Phân quyền không hợp lệ!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+			});
+// btn_VaoCa.addActionListener(new ActionListener() {
+//
+//	    			@Override
+//	    			public void actionPerformed(ActionEvent e) {
+//	    				// TODO Auto-generated method stub
+//	    				// Hiển thị hộp thoại xác nhận sau khi mở file
+//	    				LocalDateTime currentTime = LocalDateTime.now();
+//	    				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//	    				String time= currentTime.format(formatter);
+//	                    int confirm = JOptionPane.showConfirmDialog(
+//	                        null,
+//	                        "Bắt đầu ca làm :" + time,
+//	                        "Xác nhận",
+//	                        JOptionPane.YES_NO_OPTION
+//	                    );
+//
+//	                    // Xóa file nếu người dùng chọn "Yes"
+//	                    if (confirm == JOptionPane.YES_OPTION) {
+//	                        if (kiemTraVaoCaLam(lbl_ThongTinNV, currentTime)) {
+//	                            vaoCa= LocalDateTime.now();;
+//	                            click = true;
+//	                            dialog.dispose();
+//	                        } else {
+//	                        	JOptionPane.showMessageDialog(null, "Chưa tới thời gian làm viêc", "Thông báo", JOptionPane.WARNING_MESSAGE);
+//	                        }
+//	                    }else {
+//	                    	return;
+//	                    }
+//	    			}
+//	    		});
 	    		
 	    		btn_KetCa = new RoundedButton("Kết ca", 10);
 	    		btn_KetCa.setForeground(new Color(255, 255, 255));
