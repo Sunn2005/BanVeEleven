@@ -52,6 +52,7 @@ import entity.NhanVien;
 import com.toedter.calendar.JDateChooser;
 
 public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseListener{
+
 	private static final long serialVersionUID = 1L;
 	private JPanel jp_quayLai;
 	private JPanel jp_headerThongTin;

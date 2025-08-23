@@ -199,7 +199,7 @@ public class HoaDon {
 			PdfFont fontItalic = PdfFontFactory.createFont(fontPathItalic, PdfEncodings.IDENTITY_H, true);
 
 			// Thêm hình ảnh vào đầu tài liệu
-			String imagePath = getClass().getResource("/img/logo_eleven.png").getPath(); // Đường dẫn đến hình ảnh
+			String imagePath = getClass().getResource("/img/Logo_eleven.png").getPath(); // Đường dẫn đến hình ảnh
 			Image img = new Image(ImageDataFactory.create(imagePath));
 			img.setWidth(220); // Đặt chiều rộng cho hình ảnh
 
@@ -242,7 +242,7 @@ public class HoaDon {
 			tableKH.addCell(
 					new Cell().add(new Paragraph("Đơn vị bán vé: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(
-					new Cell().add(new Paragraph("Nhà ga ĐTHP").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+					new Cell().add(new Paragraph("Nhà ga Đoàn tàu Eleven").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(
 					new Cell().add(new Paragraph("Điện thoại: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(
@@ -456,7 +456,7 @@ public class HoaDon {
 			PdfFont fontItalic = PdfFontFactory.createFont(fontPathItalic, PdfEncodings.IDENTITY_H, true);
 
 			// Thêm hình ảnh vào đầu tài liệu
-			String imagePath = getClass().getResource("/img/LogoDepHonDen.png").getPath(); // Đường dẫn đến hình ảnh
+			String imagePath = getClass().getResource("/img/Logo_eleven.png").getPath(); // Đường dẫn đến hình ảnh
 			Image img = new Image(ImageDataFactory.create(imagePath));
 			img.setWidth(120); // Đặt chiều rộng cho hình ảnh
 
@@ -501,7 +501,7 @@ public class HoaDon {
 			tableKH.addCell(
 					new Cell().add(new Paragraph("Đơn vị bán vé: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(
-					new Cell().add(new Paragraph("Nhà ga ĐTHP").setFont(fontRegular)).setBorder(Border.NO_BORDER));
+					new Cell().add(new Paragraph("Nhà ga Eleven").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(
 					new Cell().add(new Paragraph("Điện thoại: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
 			tableKH.addCell(

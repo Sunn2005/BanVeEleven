@@ -153,7 +153,7 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		lb_MNV.setBounds(154, 44, 125, 24);
 		panel.add(lb_MNV);
 		
-		JLabel lb_DVBV = new JLabel("Nhà ga ĐTHP");
+		JLabel lb_DVBV = new JLabel("Nhà ga Eleven");
 		lb_DVBV.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lb_DVBV.setBounds(154, 10, 125, 24);
 		panel.add(lb_DVBV);
@@ -575,7 +575,7 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		lb_MNV.setBounds(154, 44, 125, 24);
 		panel.add(lb_MNV);
 		
-		JLabel lb_DVBV = new JLabel("Nhà ga ĐTHP");
+		JLabel lb_DVBV = new JLabel("Nhà ga Eleven");
 		lb_DVBV.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lb_DVBV.setBounds(154, 10, 125, 24);
 		panel.add(lb_DVBV);
