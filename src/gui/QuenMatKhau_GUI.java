@@ -68,7 +68,7 @@ public class QuenMatKhau_GUI extends JFrame {
 	public QuenMatKhau_GUI() {
 		// Tải hình ảnh từ package img
 		try {
-			backgroundImage = ImageIO.read(getClass().getResource("/img/anh-background.jpg"));
+			backgroundImage = ImageIO.read(getClass().getResource("/img/background.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

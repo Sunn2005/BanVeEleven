@@ -21,7 +21,7 @@ public class ConTent_JPanel extends JPanel {
 		setLayout(new GridLayout());
 		setForeground(new Color(255, 255, 255));
 		
-		ImageIcon backGround = new ImageIcon(getClass().getResource("/img/backGround.png"));
+		ImageIcon backGround = new ImageIcon(getClass().getResource("/img/background.png"));
 	    Image scaledBG = backGround.getImage().getScaledInstance(1469, 575, Image.SCALE_SMOOTH); // Thay đổi kích thước logo
 	    JLabel backGroundLabel = new JLabel(new ImageIcon(scaledBG));
 	    backGroundLabel.setBounds(0 ,0 , 1469, 575); // Cập nhật kích thước trên JLabel

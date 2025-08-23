@@ -56,7 +56,7 @@ public class DangNhap_GUI extends JFrame {
 	public DangNhap_GUI() {
 		// Tải hình ảnh từ package img
 		try {
-			backgroundImage = ImageIO.read(getClass().getResource("/img/anh-background.jpg"));
+			backgroundImage = ImageIO.read(getClass().getResource("/img/background.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -96,7 +96,7 @@ public class DangNhap_GUI extends JFrame {
 		});
 
 		// Logo
-		ImageIcon originalLogo = new ImageIcon(getClass().getResource("/img/Logo_eleven_trang.png"));
+		ImageIcon originalLogo = new ImageIcon(getClass().getResource(""));
 		Image scaledLogo = originalLogo.getImage().getScaledInstance(350, 220, Image.SCALE_SMOOTH);
 																									
 		JLabel logoLabel = new JLabel(new ImageIcon(scaledLogo));
@@ -121,10 +121,10 @@ public class DangNhap_GUI extends JFrame {
 		txtUser = new JTextField("Mã đăng nhập");
 		txtUser.setBounds(286, 266, 409, 54);
 		txtUser.setFont(new Font("Arial", Font.PLAIN, 24));
-		txtUser.setBorder(new MatteBorder(0, 0, 0, 0, Color.WHITE));
+		txtUser.setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
 		txtUser.setForeground(Color.GRAY);
 		txtUser.setOpaque(false);
-		txtUser.setCaretColor(Color.WHITE);
+		txtUser.setCaretColor(Color.BLACK);
 
 		// Tương tác với trường tên người dùng
 		txtUser.addFocusListener(new FocusAdapter() {
@@ -132,7 +132,7 @@ public class DangNhap_GUI extends JFrame {
 			public void focusGained(FocusEvent e) {
 				if (txtUser.getForeground().equals(Color.GRAY)) {
 					txtUser.setText("");
-					txtUser.setForeground(Color.WHITE);
+					txtUser.setForeground(Color.BLACK);
 				}
 			}
 
@@ -154,7 +154,7 @@ public class DangNhap_GUI extends JFrame {
 		txtPassword.setBorder(new MatteBorder(0, 0, 0, 0, Color.WHITE));
 		txtPassword.setOpaque(false);
 		contentPane.add(txtPassword);
-		txtPassword.setCaretColor(Color.WHITE);
+		txtPassword.setCaretColor(Color.BLACK);
 
 		// Tương tác với trường mật khẩu
 		txtPassword.addFocusListener(new FocusAdapter() {
@@ -162,7 +162,7 @@ public class DangNhap_GUI extends JFrame {
 			public void focusGained(FocusEvent e) {
 				if (txtPassword.getForeground().equals(Color.GRAY)) {
 					txtPassword.setText("");
-					txtPassword.setForeground(Color.WHITE);
+					txtPassword.setForeground(Color.BLACK);
 				}
 			}
 
@@ -209,7 +209,7 @@ public class DangNhap_GUI extends JFrame {
 				ArrayList<TaiKhoan> list = dsTK.docTuBang(); // Đọc danh sách tài khoản từ cơ sở dữ liệu
 
 				String user = txtUser.getText(); // Lấy tên người dùng
-				//String pass = new String(txtPassword.getPassword()); // Lấy mật khẩu
+				String pass = new String(txtPassword.getPassword()); // Lấy mật khẩu
 				
 
 				// Tìm tài khoản dựa trên tên người dùng
@@ -220,8 +220,8 @@ public class DangNhap_GUI extends JFrame {
 						// Lấy mật khẩu đã mã hóa từ cơ sở dữ liệu
 				        String matKhauDaMaHoa = taiKhoan.getMatKhau();
 						// Kiểm tra mật khẩu
-//						if (kiemTraMatKhau(pass, matKhauDaMaHoa)
-//								) {
+						if (kiemTraMatKhau(pass, matKhauDaMaHoa)
+							) {
 							// Kiểm tra trạng thái nhân viên
 							if (nhanVien_DAO.getNhanVienTheoMaNV(taiKhoan.getNhanVien().getMaNV()).isTrangThai()) {
 								// Đăng nhập thành công
@@ -236,15 +236,15 @@ public class DangNhap_GUI extends JFrame {
 								JOptionPane.showMessageDialog(null, "Nhân viên đã nghỉ!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 								return;
 							}
-//						} else {
-//							if (txtPassword.getForeground().equals(Color.GRAY)) {
-//								JOptionPane.showMessageDialog(null, "Mật khẩu không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);					
-//								return;
-//							}
-//							// Mật khẩu không đúng
-//							JOptionPane.showMessageDialog(null, "Mật khẩu không đúng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-//							return; // Kết thúc vòng lặp
-//						}
+						} else {
+							if (txtPassword.getForeground().equals(Color.GRAY)) {
+								JOptionPane.showMessageDialog(null, "Mật khẩu không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+							// Mật khẩu không đúng
+							JOptionPane.showMessageDialog(null, "Mật khẩu không đúng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+							return; // Kết thúc vòng lặp
+						}
 					}
 				}
 				// Tài khoản không tồn tại
@@ -350,7 +350,7 @@ public class DangNhap_GUI extends JFrame {
 		});
 	}
 	public boolean kiemTraMatKhau(String matKhauNhap, String matKhauDaMaHoa) {
-	    return BCrypt.checkpw(matKhauNhap, matKhauDaMaHoa);
+	    return matKhauNhap.equals(matKhauDaMaHoa);
 	}
 	public LocalTime getThoiGianBatDau() {
 		return thoiGianBatDau;
