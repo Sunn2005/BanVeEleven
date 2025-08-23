@@ -555,36 +555,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 					}
 				}
 			});
-// btn_VaoCa.addActionListener(new ActionListener() {
-//
-//	    			@Override
-//	    			public void actionPerformed(ActionEvent e) {
-//	    				// TODO Auto-generated method stub
-//	    				// Hiển thị hộp thoại xác nhận sau khi mở file
-//	    				LocalDateTime currentTime = LocalDateTime.now();
-//	    				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//	    				String time= currentTime.format(formatter);
-//	                    int confirm = JOptionPane.showConfirmDialog(
-//	                        null,
-//	                        "Bắt đầu ca làm :" + time,
-//	                        "Xác nhận",
-//	                        JOptionPane.YES_NO_OPTION
-//	                    );
-//
-//	                    // Xóa file nếu người dùng chọn "Yes"
-//	                    if (confirm == JOptionPane.YES_OPTION) {
-//	                        if (kiemTraVaoCaLam(lbl_ThongTinNV, currentTime)) {
-//	                            vaoCa= LocalDateTime.now();;
-//	                            click = true;
-//	                            dialog.dispose();
-//	                        } else {
-//	                        	JOptionPane.showMessageDialog(null, "Chưa tới thời gian làm viêc", "Thông báo", JOptionPane.WARNING_MESSAGE);
-//	                        }
-//	                    }else {
-//	                    	return;
-//	                    }
-//	    			}
-//	    		});
+
 	    		
 	    		btn_KetCa = new RoundedButton("Kết ca", 10);
 	    		btn_KetCa.setForeground(new Color(255, 255, 255));
