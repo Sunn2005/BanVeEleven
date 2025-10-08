@@ -1,10 +1,10 @@
 ﻿-- Tạo database DTHP
-CREATE DATABASE DTHP
+CREATE DATABASE GaEleven
 COLLATE Vietnamese_CI_AS;
 GO
 
 -- Sử dụng database DTHP
-USE DTHP;
+USE GaEleven;
 GO
 
 -- Tạo bảng Ga
@@ -152,21 +152,21 @@ INSERT INTO Ca (maCa, tenCa, thoiGianBatDau, thoiGianKetThuc) VALUES
 
 -- Thêm 4 nhân viên vào bảng NhanVien
 INSERT INTO NhanVien (maNV, tenNV, ngaySinh, gioiTinh, ca, cccd, email, sdt, trangThai, chucVu) VALUES
-('NV001', N'Lê Tấn Phong', '2004-03-30', 0, 'CA01', '049204013502', 'letanphong400@gmail.com', '0919128639', 1, 1),
-('NV002', N'Vương Ngọc Huệ', '2003-08-12', 1, 'CA01', '049203000000', 'ngochue12@gmail.com', '0334548218', 1, 2),
-('NV003', N'Nguyễn Danh Minh Toàn', '2004-12-14', 0, 'CA02', '079204033973', 'toannguyen041214@gmail.com', '0765593697', 1, 2),
-('NV004', N'Trần Quốc Đảm', '2004-12-23', 0, 'CA03', '052204011638', 'damtran2k4@gmail.com', '0366271754', 1, 2),
-('NV005', N'Nguyễn Văn A', '2004-12-23', 0, 'CA02', '052204011639', 'nguyenvana2k4@gmail.com', '0366271755', 1, 1),
-('NV006', N'Lê Tấn B', '2004-04-30', 0, 'CA03', '049204013504', 'letanb@gmail.com', '0919128638', 1, 1);
+('NV001', N'Trần Thanh Xuân', '2005-03-30', 0, 'CA01', '049204013502', 'tranthanhxuan400@gmail.com', '0919128639', 1, 1),
+('NV002', N'Trần Huỳnh Duy Hiệu', '2005-08-12', 1, 'CA01', '049203000000', 'duyhieu12@gmail.com', '0334548218', 1, 2),
+('NV003', N'Nguyễn Hữu Lộc', '2005-12-14', 0, 'CA02', '079204033973', 'huuloc041214@gmail.com', '0765593697', 1, 2),
+('NV004', N'Cù Văn Ngọc', '2005-12-23', 0, 'CA03', '052204011638', 'cuvanngoc2k4@gmail.com', '0366271754', 1, 2),
+('NV005', N'Nguyễn Văn A', '2005-12-23', 0, 'CA02', '052204011639', 'nguyenvana2k4@gmail.com', '0366271755', 1, 1),
+('NV006', N'Lê Tấn B', '2005-04-30', 0, 'CA03', '049204013504', 'letanb@gmail.com', '0919128638', 1, 1);
 
 -- Thêm tài khoản vào bảng TaiKhoan
 INSERT INTO TaiKhoan (maTaiKhoan, matKhau, phanQuyen, nhanVien) VALUES
-('TKQL001','$2a$10$TRm5dVhaJWRHb79qS8HsseY6IJMi9h7v1QkRnLrJv11rgJPe/a3Ha',1,'NV001'),
-('TKNV001', '$2a$10$vgzYlKNkHWLrktVahbnrge5.Zj41Dn00JGrFnJwNF5i.6Nw/0ZgAG', 2, 'NV002'),
-('TKNV002', '$2a$10$srI9GG.XfevMMh/fMzoHkeJe9Je74LBntHxb39pKfbACdcNahuzMC', 2, 'NV003'),
-('TKNV003', '$2a$10$.WeVGlVgcmyuAHU7X4PAGuJeDG9Ayh8hcHzX0inxIFWHGjzmi56vK', 2, 'NV004'),
-('TKQL002','$2a$10$G/GC.cg8UjDPo6OqUpt/Tes75yUVK39sxO6Q0qfPOM0COwDCy2vRO',1,'NV005'),
-('TKQL003','$2a$10$sbr8QaU7j9ivkv2rX3X6IuXUJ6HPWa/SI7JmYA.kcF9uwYZZEMtv2',1,'NV006');
+('TKQL001','TKQL001@',1,'NV001'),
+('TKNV001', 'TKNV001@', 2, 'NV002'),
+('TKNV002', 'TKNV002@', 2, 'NV003'),
+('TKNV003', 'TKNV003@', 2, 'NV004'),
+('TKQL002','TKQL002@',1,'NV005'),
+('TKQL003','TKQL003@',1,'NV006');
 
 -- Thêm các nhà ga vào bảng Ga
 INSERT INTO Ga (maGa, tenGa, diaChi, chiSoKm, trangThai) VALUES
@@ -346,13 +346,13 @@ INSERT INTO Ga (maGa, tenGa, diaChi, chiSoKm, trangThai) VALUES
 
 -- Thêm chuyến tàu
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen) VALUES
-('TA001', 'GA001', 'GA173', '2024-12-21', '06:00:00', '2024-12-22', '18:00:00');
+('TA001', 'GA001', 'GA173', '2025-12-21', '06:00:00', '2025-12-22', '18:00:00');
 
 -- Thêm các trạm dừng cho chuyến tàu
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen) VALUES
-('TA001', 'GA075', '2024-12-21', '06:00:00', '2024-12-21', '20:33:00'), -- Huế
-('TA001', 'GA095', '2024-12-21', '06:00:00', '2024-12-21', '23:07:00'), -- Núi Thành
-('TA001', 'GA132', '2024-12-21', '06:00:00', '2024-12-22', '09:46:00'); -- Nha Trang
+('TA001', 'GA075', '2025-12-21', '06:00:00', '2025-12-21', '20:33:00'), -- Huế
+('TA001', 'GA095', '2025-12-21', '06:00:00', '2025-12-21', '23:07:00'), -- Núi Thành
+('TA001', 'GA132', '2025-12-21', '06:00:00', '2025-12-22', '09:46:00'); -- Nha Trang
 
 -- Thêm các toa cho chuyến tàu TA001
 INSERT INTO Toa (maToa, loaiToa, maTau) VALUES
@@ -388,14 +388,14 @@ END;
 
 -- Thêm chuyến tàu TA002
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA002', 'GA173', 'GA001', '2024-12-23', '06:00:00', '2024-12-24', '19:00:00');
+VALUES ('TA002', 'GA173', 'GA001', '2025-12-23', '06:00:00', '2025-12-24', '19:00:00');
 
 -- Thêm các ga dừng
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA002', 'GA153', '2024-12-23', '08:30:00', '2024-12-23', '09:30:00'),
-('TA002', 'GA099', '2024-12-23', '11:00:00', '2024-12-23', '21:50:00'),  
-('TA002', 'GA035', '2024-12-23', '14:00:00', '2024-12-24', '11:20:00');  
+('TA002', 'GA153', '2025-12-23', '08:30:00', '2025-12-23', '09:30:00'),
+('TA002', 'GA099', '2025-12-23', '11:00:00', '2025-12-23', '21:50:00'),  
+('TA002', 'GA035', '2025-12-23', '14:00:00', '2025-12-24', '11:20:00');  
 
 -- Thêm toa ghế mềm
 INSERT INTO Toa (maToa, loaiToa, maTau)
@@ -435,13 +435,13 @@ END;
 
 -- Thêm chuyến tàu TA003
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA003', 'GA001', 'GA045', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00');
+VALUES ('TA003', 'GA001', 'GA045', '2025-12-21', '08:00:00', '2025-12-21', '20:00:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA003
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA003', 'GA020', '2024-12-21', '08:30:00', '2024-12-21', '09:00:00'),
-('TA003', 'GA035', '2024-12-21', '11:00:00', '2024-12-21', '14:30:00');
+('TA003', 'GA020', '2025-12-21', '08:30:00', '2025-12-21', '09:00:00'),
+('TA003', 'GA035', '2025-12-21', '11:00:00', '2025-12-21', '14:30:00');
 
 -- Thêm toa cho chuyến tàu TA003
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -500,14 +500,14 @@ END;
 
 -- Thêm chuyến tàu TA004
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA004', 'GA015', 'GA080', '2024-12-21', '09:00:00', '2024-12-21', '22:00:00');
+VALUES ('TA004', 'GA015', 'GA080', '2025-12-21', '09:00:00', '2025-12-21', '22:00:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA004
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA004', 'GA020', '2024-12-21', '09:30:00', '2024-12-21', '10:30:00'),
-('TA004', 'GA030', '2024-12-21', '13:30:00', '2024-12-21', '14:30:00'),
-('TA004', 'GA070', '2024-12-21', '16:30:00', '2024-12-21', '19:00:00');
+('TA004', 'GA020', '2025-12-21', '09:30:00', '2025-12-21', '10:30:00'),
+('TA004', 'GA030', '2025-12-21', '13:30:00', '2025-12-21', '14:30:00'),
+('TA004', 'GA070', '2025-12-21', '16:30:00', '2025-12-21', '19:00:00');
 
 -- Thêm toa cho chuyến tàu TA004
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -559,12 +559,12 @@ END;
 
 -- Thêm chuyến tàu TA005
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA005', 'GA075', 'GA095', '2024-12-21', '07:00:00', '2024-12-21', '15:30:00');
+VALUES ('TA005', 'GA075', 'GA095', '2025-12-21', '07:00:00', '2025-12-21', '15:30:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA005
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA005', 'GA090', '2024-12-21', '07:30:00', '2024-12-21', '10:00:00');
+('TA005', 'GA090', '2025-12-21', '07:30:00', '2025-12-21', '10:00:00');
 
 -- Thêm toa cho chuyến tàu TA005
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -608,14 +608,14 @@ END;
 
 -- Thêm chuyến tàu TA006
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA006', 'GA045', 'GA120', '2024-12-23', '10:00:00', '2024-12-23', '22:00:00');
+VALUES ('TA006', 'GA045', 'GA120', '2025-12-23', '10:00:00', '2025-12-23', '22:00:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA006
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA006', 'GA050', '2024-12-23', '10:30:00', '2024-12-23', '11:00:00'),
-('TA006', 'GA100', '2024-12-23', '12:30:00', '2024-12-23', '13:30:00'),
-('TA006', 'GA110', '2024-12-23', '14:30:00', '2024-12-23', '16:00:00');
+('TA006', 'GA050', '2025-12-23', '10:30:00', '2025-12-23', '11:00:00'),
+('TA006', 'GA100', '2025-12-23', '12:30:00', '2025-12-23', '13:30:00'),
+('TA006', 'GA110', '2025-12-23', '14:30:00', '2025-12-23', '16:00:00');
 
 -- Thêm toa cho chuyến tàu TA006
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -666,13 +666,13 @@ END;
 
 -- Thêm chuyến tàu TA007
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA007', 'GA120', 'GA150', '2024-12-23', '09:30:00', '2024-12-23', '21:30:00');
+VALUES ('TA007', 'GA120', 'GA150', '2025-12-23', '09:30:00', '2025-12-23', '21:30:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA007
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA007', 'GA130', '2024-12-23', '10:00:00', '2024-12-23', '11:00:00'),
-('TA007', 'GA140', '2024-12-23', '12:00:00', '2024-12-23', '13:30:00');
+('TA007', 'GA130', '2025-12-23', '10:00:00', '2025-12-23', '11:00:00'),
+('TA007', 'GA140', '2025-12-23', '12:00:00', '2025-12-23', '13:30:00');
 
 -- Thêm toa cho chuyến tàu TA007
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -716,14 +716,14 @@ END;
 
 -- Thêm chuyến tàu TA008
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA008', 'GA150', 'GA110', '2024-12-24', '07:30:00', '2024-12-24', '18:00:00');
+VALUES ('TA008', 'GA150', 'GA110', '2025-12-24', '07:30:00', '2025-12-24', '18:00:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA008
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA008', 'GA140', '2024-12-24', '08:00:00', '2024-12-24', '09:00:00'),
-('TA008', 'GA130', '2024-12-24', '10:30:00', '2024-12-24', '11:30:00'),
-('TA008', 'GA120', '2024-12-24', '13:00:00', '2024-12-24', '14:30:00');
+('TA008', 'GA140', '2025-12-24', '08:00:00', '2025-12-24', '09:00:00'),
+('TA008', 'GA130', '2025-12-24', '10:30:00', '2025-12-24', '11:30:00'),
+('TA008', 'GA120', '2025-12-24', '13:00:00', '2025-12-24', '14:30:00');
 
 -- Thêm toa cho chuyến tàu TA008
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -767,7 +767,7 @@ END;
 
 -- Thêm chuyến tàu TA009
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA009', 'GA110', 'GA100', '2024-12-24', '06:00:00', '2024-12-24', '17:00:00');
+VALUES ('TA009', 'GA110', 'GA100', '2025-12-24', '06:00:00', '2025-12-24', '17:00:00');
 
 -- Thêm toa cho chuyến tàu TA009
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -811,12 +811,12 @@ END;
 
 -- Thêm chuyến tàu TA010
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA010', 'GA160', 'GA140', '2024-12-25', '06:30:00', '2024-12-25', '16:00:00');
+VALUES ('TA010', 'GA160', 'GA140', '2025-12-25', '06:30:00', '2025-12-25', '16:00:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA010
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA010', 'GA150', '2024-12-25', '09:00:00', '2024-12-25', '10:30:00');
+('TA010', 'GA150', '2025-12-25', '09:00:00', '2025-12-25', '10:30:00');
 
 -- Thêm toa cho chuyến tàu TA010
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -860,12 +860,12 @@ END;
 
 -- Thêm chuyến tàu TA011
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA011', 'GA140', 'GA130', '2024-12-25', '07:00:00', '2024-12-25', '17:00:00');
+VALUES ('TA011', 'GA140', 'GA130', '2025-12-25', '07:00:00', '2025-12-25', '17:00:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA011
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA011', 'GA135', '2024-12-25', '08:00:00', '2024-12-25', '09:30:00');
+('TA011', 'GA135', '2025-12-25', '08:00:00', '2025-12-25', '09:30:00');
 
 -- Thêm toa cho chuyến tàu TA011
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -909,12 +909,12 @@ END;
 
 -- Thêm chuyến tàu TA012
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA012', 'GA120', 'GA130', '2024-12-26', '05:30:00', '2024-12-26', '15:30:00');
+VALUES ('TA012', 'GA120', 'GA130', '2025-12-26', '05:30:00', '2025-12-26', '15:30:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA012
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA012', 'GA123', '2024-12-26', '06:30:00', '2024-12-26', '08:00:00');
+('TA012', 'GA123', '2025-12-26', '06:30:00', '2025-12-26', '08:00:00');
 
 -- Thêm toa cho chuyến tàu TA012
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -958,13 +958,13 @@ END;
 
 -- Thêm chuyến tàu TA013
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA013', 'GA100', 'GA140', '2024-12-26', '07:00:00', '2024-12-26', '17:30:00');
+VALUES ('TA013', 'GA100', 'GA140', '2025-12-26', '07:00:00', '2025-12-26', '17:30:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA013
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA013', 'GA110', '2024-12-26', '08:00:00', '2024-12-26', '09:30:00'),
-('TA013', 'GA130', '2024-12-26', '10:00:00', '2024-12-26', '11:30:00');
+('TA013', 'GA110', '2025-12-26', '08:00:00', '2025-12-26', '09:30:00'),
+('TA013', 'GA130', '2025-12-26', '10:00:00', '2025-12-26', '11:30:00');
 
 -- Thêm toa cho chuyến tàu TA013
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -1008,14 +1008,14 @@ END;
 
 -- Thêm chuyến tàu TA014
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA014', 'GA040', 'GA080', '2024-12-27', '06:00:00', '2024-12-27', '16:00:00');
+VALUES ('TA014', 'GA040', 'GA080', '2025-12-27', '06:00:00', '2025-12-27', '16:00:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA014
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA014', 'GA060', '2024-12-27', '07:00:00', '2024-12-27', '08:30:00'),
-('TA014', 'GA070', '2024-12-27', '09:00:00', '2024-12-27', '10:30:00'),
-('TA014', 'GA078', '2024-12-27', '11:00:00', '2024-12-27', '12:30:00');
+('TA014', 'GA060', '2025-12-27', '07:00:00', '2025-12-27', '08:30:00'),
+('TA014', 'GA070', '2025-12-27', '09:00:00', '2025-12-27', '10:30:00'),
+('TA014', 'GA078', '2025-12-27', '11:00:00', '2025-12-27', '12:30:00');
 
 -- Thêm toa cho chuyến tàu TA014
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -1059,14 +1059,14 @@ END;
 
 -- Thêm chuyến tàu TA015
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA015', 'GA169', 'GA099', '2024-12-27', '08:00:00', '2024-12-27', '18:00:00');
+VALUES ('TA015', 'GA169', 'GA099', '2025-12-27', '08:00:00', '2025-12-27', '18:00:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA015
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA015', 'GA150', '2024-12-27', '09:00:00', '2024-12-27', '10:30:00'),
-('TA015', 'GA120', '2024-12-27', '11:00:00', '2024-12-27', '12:30:00'),
-('TA015', 'GA100', '2024-12-27', '13:00:00', '2024-12-27', '14:30:00');
+('TA015', 'GA150', '2025-12-27', '09:00:00', '2025-12-27', '10:30:00'),
+('TA015', 'GA120', '2025-12-27', '11:00:00', '2025-12-27', '12:30:00'),
+('TA015', 'GA100', '2025-12-27', '13:00:00', '2025-12-27', '14:30:00');
 
 -- Thêm toa cho chuyến tàu TA015
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -1110,14 +1110,14 @@ END;
 
 -- Thêm chuyến tàu TA016
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA016', 'GA100', 'GA045', '2024-12-28', '07:00:00', '2024-12-28', '17:00:00');
+VALUES ('TA016', 'GA100', 'GA045', '2025-12-28', '07:00:00', '2025-12-28', '17:00:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA016
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA016', 'GA090', '2024-12-28', '08:00:00', '2024-12-28', '09:30:00'),
-('TA016', 'GA060', '2024-12-28', '10:00:00', '2024-12-28', '11:30:00'),
-('TA016', 'GA050', '2024-12-28', '12:00:00', '2024-12-28', '13:30:00');
+('TA016', 'GA090', '2025-12-28', '08:00:00', '2025-12-28', '09:30:00'),
+('TA016', 'GA060', '2025-12-28', '10:00:00', '2025-12-28', '11:30:00'),
+('TA016', 'GA050', '2025-12-28', '12:00:00', '2025-12-28', '13:30:00');
 
 -- Thêm toa cho chuyến tàu TA016
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -1161,14 +1161,14 @@ END;
 
 -- Thêm chuyến tàu TA017
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA017', 'GA139', 'GA035', '2024-12-28', '09:00:00', '2024-12-28', '19:00:00');
+VALUES ('TA017', 'GA139', 'GA035', '2025-12-28', '09:00:00', '2025-12-28', '19:00:00');
 
 -- Thêm các ga dừng cho chuyến tàu TA017
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA017', 'GA123', '2024-12-28', '10:00:00', '2024-12-28', '11:30:00'),
-('TA017', 'GA086', '2024-12-28', '12:00:00', '2024-12-28', '13:30:00'),
-('TA017', 'GA045', '2024-12-28', '14:00:00', '2024-12-28', '15:30:00');
+('TA017', 'GA123', '2025-12-28', '10:00:00', '2025-12-28', '11:30:00'),
+('TA017', 'GA086', '2025-12-28', '12:00:00', '2025-12-28', '13:30:00'),
+('TA017', 'GA045', '2025-12-28', '14:00:00', '2025-12-28', '15:30:00');
 
 -- Thêm toa cho chuyến tàu TA017
 INSERT INTO Toa (maToa, loaiToa, maTau) 
@@ -1212,14 +1212,14 @@ END;
 
 -- Thêm chuyến tàu TA018
 INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
-VALUES ('TA018', 'GA173', 'GA001', '2024-12-26', '06:00:00', '2024-12-27', '19:00:00');
+VALUES ('TA018', 'GA173', 'GA001', '2025-12-26', '06:00:00', '2025-12-27', '19:00:00');
 
 -- Thêm các ga dừng
 INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen)
 VALUES 
-('TA018', 'GA153', '2024-12-26', '08:30:00', '2024-12-26', '09:30:00'),
-('TA018', 'GA099', '2024-12-26', '11:00:00', '2024-12-26', '21:50:00'),  
-('TA018', 'GA035', '2024-12-26', '14:00:00', '2024-12-27', '11:20:00');  
+('TA018', 'GA153', '2025-12-26', '08:30:00', '2025-12-26', '09:30:00'),
+('TA018', 'GA099', '2025-12-26', '11:00:00', '2025-12-26', '21:50:00'),  
+('TA018', 'GA035', '2025-12-26', '14:00:00', '2025-12-27', '11:20:00');  
 
 -- Thêm các toa
 INSERT INTO Toa (maToa, loaiToa, maTau)
@@ -1279,16 +1279,16 @@ INSERT INTO KhachHang (maKH, tenKH, email, sdt, cccd) VALUES
 
 -- Thêm hóa đơn cho từng khách hàng
 INSERT INTO HoaDon (maHoaDon, ngayLapHoaDon, nhanVien, khachHang, daHoanVe, daHoanTien) VALUES
-('121224NV00100001', '2024-12-12', 'NV001', 'KH0006', 0, 0),
-('121224NV00100002', '2024-12-12', 'NV001', 'KH0007', 0, 0),
-('121224NV00100003', '2024-12-12', 'NV001', 'KH0008', 0, 0),
-('121224NV00100004', '2024-12-12', 'NV001', 'KH0009', 0, 0),
-('121224NV00100005', '2024-12-12', 'NV001', 'KH0010', 0, 0),
-('121224NV00100006', '2024-12-12', 'NV001', 'KH0011', 0, 0),
-('121224NV00100007', '2024-12-12', 'NV001', 'KH0012', 0, 0),
-('121224NV00100008', '2024-12-12', 'NV001', 'KH0013', 0, 0),
-('121224NV00100009', '2024-12-12', 'NV001', 'KH0014', 0, 0),
-('121224NV00100010', '2024-12-12', 'NV001', 'KH0015', 0, 0);
+('121224NV00100001', '2025-12-12', 'NV001', 'KH0006', 0, 0),
+('121224NV00100002', '2025-12-12', 'NV001', 'KH0007', 0, 0),
+('121224NV00100003', '2025-12-12', 'NV001', 'KH0008', 0, 0),
+('121224NV00100004', '2025-12-12', 'NV001', 'KH0009', 0, 0),
+('121224NV00100005', '2025-12-12', 'NV001', 'KH0010', 0, 0),
+('121224NV00100006', '2025-12-12', 'NV001', 'KH0011', 0, 0),
+('121224NV00100007', '2025-12-12', 'NV001', 'KH0012', 0, 0),
+('121224NV00100008', '2025-12-12', 'NV001', 'KH0013', 0, 0),
+('121224NV00100009', '2025-12-12', 'NV001', 'KH0014', 0, 0),
+('121224NV00100010', '2025-12-12', 'NV001', 'KH0015', 0, 0);
 
 -- Thêm chi tiết hóa đơn
 INSERT INTO ChiTietHoaDon (maChiTiet, hoaDon, soLuong, thue) VALUES
@@ -1305,16 +1305,16 @@ INSERT INTO ChiTietHoaDon (maChiTiet, hoaDon, soLuong, thue) VALUES
 
 -- Thêm vé cho từng chi tiết hóa đơn
 INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES
-('VE1212240007', 'TA001', 'TA001_01', 1, 'KH0006', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100001'),
-('VE1212240008', 'TA001', 'TA001_01', 2, 'KH0007', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100002'),
-('VE1212240009', 'TA001', 'TA001_01', 3, 'KH0008', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100003'),
-('VE1212240010', 'TA001', 'TA001_01', 4, 'KH0009', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100004'),
-('VE1212240011', 'TA001', 'TA001_01', 5, 'KH0010', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100005'),
-('VE1212240012', 'TA001', 'TA001_01', 6, 'KH0011', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100006'),
-('VE1212240013', 'TA001', 'TA001_01', 7, 'KH0012', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100007'),
-('VE1212240014', 'TA001', 'TA001_01', 8, 'KH0013', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100008'),
-('VE1212240015', 'TA001', 'TA001_01', 9, 'KH0014', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100009'),
-('VE1212240016', 'TA001', 'TA001_01', 10, 'KH0015', '2024-12-21', '06:00:00', '2024-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100010');
+('VE1212240007', 'TA001', 'TA001_01', 1, 'KH0006', '2025-12-21', '06:00:00', '2025-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100001'),
+('VE1212240008', 'TA001', 'TA001_01', 2, 'KH0007', '2025-12-21', '06:00:00', '2025-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100002'),
+('VE1212240009', 'TA001', 'TA001_01', 3, 'KH0008', '2025-12-21', '06:00:00', '2025-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100003'),
+('VE1212240010', 'TA001', 'TA001_01', 4, 'KH0009', '2025-12-21', '06:00:00', '2025-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100004'),
+('VE1212240011', 'TA001', 'TA001_01', 5, 'KH0010', '2025-12-21', '06:00:00', '2025-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100005'),
+('VE1212240012', 'TA001', 'TA001_01', 6, 'KH0011', '2025-12-21', '06:00:00', '2025-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100006'),
+('VE1212240013', 'TA001', 'TA001_01', 7, 'KH0012', '2025-12-21', '06:00:00', '2025-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100007'),
+('VE1212240014', 'TA001', 'TA001_01', 8, 'KH0013', '2025-12-21', '06:00:00', '2025-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100008'),
+('VE1212240015', 'TA001', 'TA001_01', 9, 'KH0014', '2025-12-21', '06:00:00', '2025-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100009'),
+('VE1212240016', 'TA001', 'TA001_01', 10, 'KH0015', '2025-12-21', '06:00:00', '2025-12-21', '18:00:00', 'GA001', 'GA173', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00100010');
 
 -- Cập nhật trạng thái ghế của 10 ghế
 UPDATE Ghe
@@ -1331,11 +1331,11 @@ INSERT INTO KhachHang (maKH, tenKH, email, sdt, cccd) VALUES
 ('KH0020', N'Võ Văn T', 'vot@gmail.com', '0912345697', '049204013521');
 -- Thêm hóa đơn cho 5 khách hàng
 INSERT INTO HoaDon (maHoaDon, ngayLapHoaDon, nhanVien, khachHang, daHoanVe, daHoanTien) VALUES
-('121224NV00200012', '2024-12-12', 'NV002', 'KH0016', 0, 0),
-('121224NV00200013', '2024-12-12', 'NV002', 'KH0017', 0, 0),
-('121224NV00200014', '2024-12-12', 'NV002', 'KH0018', 0, 0),
-('121224NV00200015', '2024-12-12', 'NV002', 'KH0019', 0, 0),
-('121224NV00200016', '2024-12-12', 'NV002', 'KH0020', 0, 0);
+('121224NV00200012', '2025-12-12', 'NV002', 'KH0016', 0, 0),
+('121224NV00200013', '2025-12-12', 'NV002', 'KH0017', 0, 0),
+('121224NV00200014', '2025-12-12', 'NV002', 'KH0018', 0, 0),
+('121224NV00200015', '2025-12-12', 'NV002', 'KH0019', 0, 0),
+('121224NV00200016', '2025-12-12', 'NV002', 'KH0020', 0, 0);
 -- Thêm chi tiết hóa đơn và vé
 INSERT INTO ChiTietHoaDon (maChiTiet, hoaDon, soLuong, thue) VALUES
 ('CT121224NV00200012', '121224NV00200012', 2, 0.1), -- KH0016, 2 vé
@@ -1346,22 +1346,22 @@ INSERT INTO ChiTietHoaDon (maChiTiet, hoaDon, soLuong, thue) VALUES
 
 INSERT INTO Ve (maVe, tau, toa, soGhe, khachHang, ngayDi, gioDi, ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai, chiTiet) VALUES
 -- KH0016: 2 vé
-('VE1212240018', 'TA003', 'TA003_01', 1, 'KH0016', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200012'),
-('VE1212240019', 'TA003', 'TA003_01', 2, 'KH0016', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200012'),
+('VE1212240018', 'TA003', 'TA003_01', 1, 'KH0016', '2025-12-21', '08:00:00', '2025-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200012'),
+('VE1212240019', 'TA003', 'TA003_01', 2, 'KH0016', '2025-12-21', '08:00:00', '2025-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200012'),
 
 -- KH0017: 2 vé
-('VE1212240020', 'TA003', 'TA003_01', 3, 'KH0017', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200013'),
-('VE1212240021', 'TA003', 'TA003_01', 4, 'KH0017', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200013'),
+('VE1212240020', 'TA003', 'TA003_01', 3, 'KH0017', '2025-12-21', '08:00:00', '2025-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200013'),
+('VE1212240021', 'TA003', 'TA003_01', 4, 'KH0017', '2025-12-21', '08:00:00', '2025-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200013'),
 
 -- KH0018: 1 vé
-('VE1212240022', 'TA003', 'TA003_01', 5, 'KH0018', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200014'),
+('VE1212240022', 'TA003', 'TA003_01', 5, 'KH0018', '2025-12-21', '08:00:00', '2025-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200014'),
 
 -- KH0019: 1 vé
-('VE1212240023', 'TA003', 'TA003_01', 6, 'KH0019', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200015'),
+('VE1212240023', 'TA003', 'TA003_01', 6, 'KH0019', '2025-12-21', '08:00:00', '2025-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200015'),
 
 -- KH0020: 2 vé
-('VE1212240024', 'TA003', 'TA003_01', 7, 'KH0020', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200016'),
-('VE1212240025', 'TA003', 'TA003_01', 8, 'KH0020', '2024-12-21', '08:00:00', '2024-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200016');
+('VE1212240024', 'TA003', 'TA003_01', 7, 'KH0020', '2025-12-21', '08:00:00', '2025-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200016'),
+('VE1212240025', 'TA003', 'TA003_01', 8, 'KH0020', '2025-12-21', '08:00:00', '2025-12-21', '20:00:00', 'GA001', 'GA045', N'Giường nằm', N'Người lớn', 0, 'CT121224NV00200016');
 
 -- Cập nhật trạng thái ghế đã đặt
 UPDATE Ghe
@@ -1400,3 +1400,4 @@ WHERE maHoaDon = '121224NV00200016';
 UPDATE HoaDon
 SET daHoanTien = 1, daHoanVe = 1
 WHERE maHoaDon = '121224NV00200016';
+
