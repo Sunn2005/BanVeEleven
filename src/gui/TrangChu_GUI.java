@@ -494,7 +494,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    		contentPane1.add(lb_ChucVu);
 	    		
 	    		btn_VaoCa = new RoundedButton("Vào ca", 10);
-	    		btn_VaoCa.setForeground(new Color(255, 255, 255));
+	    		btn_VaoCa.setForeground(new Color(7, 7, 7));
 	    		btn_VaoCa.setBackground(new Color(51, 102, 153));
 	    		btn_VaoCa.setFont(new Font("Tahoma", Font.PLAIN, 15));
 	    		btn_VaoCa.setBounds(247, 271, 85, 21);
@@ -556,9 +556,9 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 				}
 			});
 
-	    		
+
 	    		btn_KetCa = new RoundedButton("Kết ca", 10);
-	    		btn_KetCa.setForeground(new Color(255, 255, 255));
+	    		btn_KetCa.setForeground(new Color(7, 7, 7));
 	    		btn_KetCa.setBackground(new Color(51, 102, 153));
 	    		btn_KetCa.setFont(new Font("Tahoma", Font.PLAIN, 15));
 	    		btn_KetCa.setBounds(382, 271, 85, 21);

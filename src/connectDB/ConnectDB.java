@@ -11,9 +11,9 @@ public class ConnectDB {
 	public static ConnectDB getInstance() { return instance; }
 
 	public static void connect() { 
-		String url = "jdbc:sqlserver://localhost:1433;databaseName=DTHP";
-		String user = "sa"; 
-		String password = "sapassword"; 
+		String url = "jdbc:sqlserver://localhost:1433;databaseName=GaEleven";
+		String user = "SA";
+		String password = "MyStrongPass123";
 		try { 
 			con = DriverManager.getConnection(url, user, password); 
 			if (con != null)
