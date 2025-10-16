@@ -52,7 +52,7 @@ import entity.Ve;
 
 import javax.swing.JComboBox;
 
-public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,DocumentListener{
+public class ChuyenTau_Gui extends JPanel implements MouseListener,DocumentListener{
 	/**
 	 * 
 	 */
@@ -86,7 +86,7 @@ public class TraCuuChuyenTauGiaVe_Gui extends JPanel implements MouseListener,Do
 	private JLabel lblNewLabel_3_2_1;
 	private JComboBox<String> comboBox_Tau;
 	private int dem = 0;
-	public TraCuuChuyenTauGiaVe_Gui(TrangChu_GUI trangChu) {
+	public ChuyenTau_Gui(TrangChu_GUI trangChu) {
 		setBackground(new Color(255, 255, 255));
 		setBounds(0, 170, 1460, 570);
 		setLayout(null);

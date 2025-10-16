@@ -76,10 +76,6 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	private JMenu hoaDon;
 	private JMenuItem qlhd;
 	private JMenuItem xemcthd;
-	private JMenu traCuuKH;
-	private JMenuItem traCuuVCT;
-	private JMenuItem traCuuKhachHang;
-	private JMenuItem traCuuNV;
 	private JMenu thongKe;
 	private JMenuItem thongKeDT;
 	private JMenuItem thongKeTheoCa;
@@ -110,6 +106,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	private JPanel contentPane1;
 	private JLabel lb_TenNV,lb_MaNV,lb_NgaySinh,lb_CCCD,lb_Email,lb_SDT,lb_ChucVu,userIconLabel1;
 	protected JDialog dialog;
+	private JMenu traCuuCT;
 	
 	public TrangChu_GUI(DangNhap_GUI dangNhap) {
 		this.dangNhap = dangNhap;
@@ -296,19 +293,11 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		});
 		hoaDon.add(xemcthd);
 		
-		traCuuKH = new JMenu("Tra cứu");
-		traCuuKH.setFont(new Font("Segoe UI", Font.BOLD, 20));
-		traCuuKH.setPreferredSize(new Dimension(146, 30));
-		menuBar.add(traCuuKH);
+		traCuuCT = new JMenu("Chuyến tàu");
+		traCuuCT.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		traCuuCT.setPreferredSize(new Dimension(146, 30));
+		menuBar.add(traCuuCT);
 		
-		traCuuVCT = new JMenuItem("Tra cứu giá vé và chuyến tàu");
-		traCuuKH.add(traCuuVCT);
-		
-		traCuuKhachHang = new JMenuItem("Tra cứu khách hàng");
-		traCuuKH.add(traCuuKhachHang);
-		
-		traCuuNV = new JMenuItem("Tra cứu nhân viên ");
-		traCuuKH.add(traCuuNV);
 		
 		thongKe = new JMenu("Thống kê");
 		thongKe.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -682,48 +671,38 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		
 		ConTent_JPanel jpct = new ConTent_JPanel();
 		content.add(jpct);
-	    
-		traCuuKhachHang.addActionListener(new ActionListener() {
+		traCuuCT.addMenuListener(new MenuListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void menuSelected(MenuEvent e) {
 				// TODO Auto-generated method stub
 				if(click) {
-					TraCuuKhachHang_GUI tckh= new TraCuuKhachHang_GUI(TrangChu_GUI.this);
-					content.removeAll();
-					content.add(tckh); // Sử dụng layout thích hợp
+					ChuyenTau_Gui tcvct = new ChuyenTau_Gui(TrangChu_GUI.this);
+					content.removeAll();;
+					content.add(tcvct); // Sử dụng layout thích hợp
 					content.revalidate();
 					content.repaint();
 				}else {
 					JOptionPane.showMessageDialog(null, "Vui lòng nhấn vào ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE);
 				}
 			}
-		});
-		traCuuNV.addActionListener(new ActionListener() {
-			
+
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void menuDeselected(MenuEvent e) {
 				// TODO Auto-generated method stub
-				TraCuuNhanVien_GUI tcnv = new TraCuuNhanVien_GUI(TrangChu_GUI.this);
-				content.removeAll();
-				content.add(tcnv); // Sử dụng layout thích hợp
-				content.revalidate();
-				content.repaint();
+
+			}
+
+			@Override
+			public void menuCanceled(MenuEvent e) {
+				// TODO Auto-generated method stub
 
 			}
 		});
-		traCuuVCT.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-					TraCuuChuyenTauGiaVe_Gui tcvct = new TraCuuChuyenTauGiaVe_Gui(TrangChu_GUI.this);
-					content.removeAll();;
-					content.add(tcvct); // Sử dụng layout thích hợp
-					content.revalidate();
-					content.repaint();
-			}
-		});
+
+
+
 		datVe.addActionListener(new ActionListener() {
 
 			@Override
