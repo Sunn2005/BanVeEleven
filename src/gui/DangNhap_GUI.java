@@ -118,11 +118,11 @@ public class DangNhap_GUI extends JFrame {
 		contentPane.add(passIconLabel);
 
 		// Tên người dùng
-		txtUser = new JTextField("Mã đăng nhập");
+		txtUser = new JTextField("Tên đăng nhập");
 		txtUser.setBounds(286, 266, 409, 54);
 		txtUser.setFont(new Font("Arial", Font.PLAIN, 24));
 		txtUser.setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
-		txtUser.setForeground(Color.GRAY);
+		txtUser.setForeground(Color.white);
 		txtUser.setOpaque(false);
 		txtUser.setCaretColor(Color.BLACK);
 
@@ -130,17 +130,17 @@ public class DangNhap_GUI extends JFrame {
 		txtUser.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (txtUser.getForeground().equals(Color.GRAY)) {
+				if (txtUser.getForeground().equals(Color.white)) {
 					txtUser.setText("");
-					txtUser.setForeground(Color.BLACK);
+					txtUser.setForeground(Color.black);
 				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (txtUser.getText().isEmpty()) {
-					txtUser.setForeground(Color.GRAY);
-					txtUser.setText("Mã đăng nhập");
+					txtUser.setForeground(Color.white);
+					txtUser.setText("Tên đăng nhập");
 				}
 			}
 		});
@@ -150,30 +150,36 @@ public class DangNhap_GUI extends JFrame {
 		txtPassword = new JPasswordField("Mật khẩu");
 		txtPassword.setBounds(286, 330, 409, 54);
 		txtPassword.setFont(new Font("Arial", Font.PLAIN, 24));
-		txtPassword.setForeground(Color.GRAY);
+		txtPassword.setForeground(Color.WHITE);
 		txtPassword.setBorder(new MatteBorder(0, 0, 0, 0, Color.WHITE));
 		txtPassword.setOpaque(false);
+		txtPassword.setCaretColor(Color.WHITE);
 		contentPane.add(txtPassword);
-		txtPassword.setCaretColor(Color.BLACK);
 
-		// Tương tác với trường mật khẩu
+		// Placeholder ban đầu
+		txtPassword.setEchoChar((char) 0); // Tắt hiển thị dấu chấm
+
+		// Tương tác focus
 		txtPassword.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (txtPassword.getForeground().equals(Color.GRAY)) {
-					txtPassword.setText("");
-					txtPassword.setForeground(Color.BLACK);
-				}
-			}
+		    @Override
+		    public void focusGained(FocusEvent e) {
+		        if (String.valueOf(txtPassword.getPassword()).equals("Mật khẩu")) {
+		            txtPassword.setText("");
+		            txtPassword.setForeground(Color.black);
+		            txtPassword.setEchoChar('•'); // Bật lại dấu chấm khi nhập
+		        }
+		    }
 
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (txtPassword.getPassword().length == 0) {
-					txtPassword.setForeground(Color.GRAY);
-					txtPassword.setText("Mật khẩu");
-				}
-			}
+		    @Override
+		    public void focusLost(FocusEvent e) {
+		        if (txtPassword.getPassword().length == 0) {
+		            txtPassword.setText("Mật khẩu");
+		            txtPassword.setForeground(Color.white);
+		            txtPassword.setEchoChar((char) 0); // Tắt dấu chấm để hiển thị placeholder
+		        }
+		    }
 		});
+
 
 		// Nút Đăng Nhập
 		btnLogin = new JButton("Đăng nhập") {
@@ -200,7 +206,7 @@ public class DangNhap_GUI extends JFrame {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				if (txtUser.getForeground().equals(Color.GRAY)) {
+				if (txtUser.getForeground().equals(Color.white)) {
 					JOptionPane.showMessageDialog(null, "Tài khoản không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);					
 					return;
 				}
@@ -218,9 +224,9 @@ public class DangNhap_GUI extends JFrame {
 				if (taiKhoan.getMaTaiKhoan().equals(user)) 
 					{
 						// Lấy mật khẩu đã mã hóa từ cơ sở dữ liệu
-				        String matKhauDaMaHoa = taiKhoan.getMatKhau();
+				        String matKhauSQL = taiKhoan.getMatKhau();
 						// Kiểm tra mật khẩu
-						if (kiemTraMatKhau(pass, matKhauDaMaHoa)
+						if (kiemTraMatKhau(pass, matKhauSQL)
 							) {
 							// Kiểm tra trạng thái nhân viên
 							if (nhanVien_DAO.getNhanVienTheoMaNV(taiKhoan.getNhanVien().getMaNV()).isTrangThai()) {
@@ -237,7 +243,7 @@ public class DangNhap_GUI extends JFrame {
 								return;
 							}
 						} else {
-							if (txtPassword.getForeground().equals(Color.GRAY)) {
+							if (txtPassword.getForeground().equals(Color.white)) {
 								JOptionPane.showMessageDialog(null, "Mật khẩu không được rỗng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
 								return;
 							}
@@ -294,8 +300,8 @@ public class DangNhap_GUI extends JFrame {
 		contentPane.add(lblQuenMK);
 
 		// Footer
-		JLabel lblFooter = new JLabel("Eleven | Group 11 | DHKTPM19BTT - 422000422704");
-		lblFooter.setBounds(305, 532, 316, 21);
+		JLabel lblFooter = new JLabel("Nhà ga Eleven | Group 11 | DHKTPM19BTT - 422000422704");
+		lblFooter.setBounds(305, 532, 500, 21);
 		lblFooter.setForeground(Color.WHITE);
 		lblFooter.setFont(new Font("Arial", Font.PLAIN, 13));
 		contentPane.add(lblFooter);
@@ -349,8 +355,8 @@ public class DangNhap_GUI extends JFrame {
 			this.setFocusableWindowState(true); // Bật lại focus sau khi cửa sổ hiển thị
 		});
 	}
-	public boolean kiemTraMatKhau(String matKhauNhap, String matKhauDaMaHoa) {
-	    return matKhauNhap.equals(matKhauDaMaHoa);
+	public boolean kiemTraMatKhau(String matKhauNhap, String matKhauSQL) {
+	    return matKhauNhap.equals(matKhauSQL);
 	}
 	public LocalTime getThoiGianBatDau() {
 		return thoiGianBatDau;

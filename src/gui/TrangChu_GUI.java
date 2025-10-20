@@ -111,7 +111,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	public TrangChu_GUI(DangNhap_GUI dangNhap) {
 		this.dangNhap = dangNhap;
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Ngăn đóng cửa sổ trực tiếp
-		setBounds(100, 100, 1480, 810);
+		setBounds(100, 100, 1480, 1000);
 		setLocationRelativeTo(null);
 		setTitle("Quản lý nhà ga Eleven");
 		setResizable(false);
@@ -422,7 +422,6 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    		lblNewLabel_2_1_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 	    		lblNewLabel_2_1_1_1_1_1.setBounds(227, 220, 105, 25);
 	    		contentPane1.add(lblNewLabel_2_1_1_1_1_1);
-	    		
 	    		lb_MaNV = new JLabel();
 	    		lb_MaNV.setText(nhanVien_DAO.getNhanVienTheoMaNV((taiKhoan_DAO.getTaiKhoanTheoMaTK(dangNhap.getTaiKhoanLogined().getMaTaiKhoan()))
 	    				.getNhanVien().getMaNV()).getMaNV());

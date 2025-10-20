@@ -152,8 +152,8 @@ INSERT INTO Ca (maCa, tenCa, thoiGianBatDau, thoiGianKetThuc) VALUES
 
 -- Thêm 4 nhân viên vào bảng NhanVien
 INSERT INTO NhanVien (maNV, tenNV, ngaySinh, gioiTinh, ca, cccd, email, sdt, trangThai, chucVu) VALUES
-('NV001', N'Trần Thanh Xuân', '2005-03-30', 0, 'CA01', '049204013502', 'tranthanhxuan400@gmail.com', '0919128639', 1, 1),
-('NV002', N'Trần Huỳnh Duy Hiệu', '2005-08-12', 1, 'CA01', '049203000000', 'duyhieu12@gmail.com', '0334548218', 1, 2),
+('NV001', N'Trần Thanh Xuân', '2005-03-30', 1, 'CA01', '049204013502', 'tranthanhxuan400@gmail.com', '0919128639', 1, 1),
+('NV002', N'Trần Huỳnh Duy Hiệu', '2005-08-12', 0, 'CA01', '049203000000', 'duyhieu12@gmail.com', '0334548218', 1, 2),
 ('NV003', N'Nguyễn Hữu Lộc', '2005-12-14', 0, 'CA02', '079204033973', 'huuloc041214@gmail.com', '0765593697', 1, 2),
 ('NV004', N'Cù Văn Ngọc', '2005-12-23', 0, 'CA03', '052204011638', 'cuvanngoc2k4@gmail.com', '0366271754', 1, 2),
 ('NV005', N'Nguyễn Văn A', '2005-12-23', 0, 'CA02', '052204011639', 'nguyenvana2k4@gmail.com', '0366271755', 1, 1),
@@ -1256,6 +1256,162 @@ BEGIN
     INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (@i, 'TA018_05', 1);
     SET @i = @i + 1;
 END;
+
+--------------------------------------------------------------
+-- THÊM CÁC CHUYẾN TÀU MỚI TỪ TA019 → TA030 (01–20/12/2025)
+--------------------------------------------------------------
+
+-- ====================== TA019 ======================
+INSERT INTO ChuyenTau (maTau, gaDi, gaDen, ngayDi, gioDi, ngayDen, gioDen)
+VALUES ('TA019', 'GA001', 'GA035', '2025-12-01', '06:00:00', '2025-12-01', '18:30:00');
+
+INSERT INTO ChuyenTau_Ga (maTau, maGa, ngayDi, gioDi, ngayDen, gioDen) VALUES
+('TA019', 'GA015', '2025-12-01', '07:00:00', '2025-12-01', '08:00:00'),
+('TA019', 'GA023', '2025-12-01', '09:30:00', '2025-12-01', '11:00:00'),
+('TA019', 'GA025', '2025-12-01', '12:00:00', '2025-12-01', '13:30:00');
+
+INSERT INTO Toa (maToa, loaiToa, maTau) VALUES
+('TA019_01', N'Giường nằm', 'TA019'),
+('TA019_02', N'Ghế mềm', 'TA019'),
+('TA019_03', N'VIP', 'TA019');
+
+SET @i = 1;
+WHILE @i <= 32 BEGIN INSERT INTO Ghe VALUES (@i, 'TA019_01', 1); SET @i=@i+1; END;
+SET @i = 1;
+WHILE @i <= 64 BEGIN INSERT INTO Ghe VALUES (@i, 'TA019_02', 1); SET @i=@i+1; END;
+SET @i = 1;
+WHILE @i <= 20 BEGIN INSERT INTO Ghe VALUES (@i, 'TA019_03', 1); SET @i=@i+1; END;
+
+
+-- ====================== TA020 ======================
+INSERT INTO ChuyenTau VALUES ('TA020', 'GA035', 'GA075', '2025-12-02', '07:00:00', '2025-12-02', '19:30:00');
+
+INSERT INTO ChuyenTau_Ga VALUES
+('TA020', 'GA045', '2025-12-02', '09:00:00', '2025-12-02', '10:00:00'),
+('TA020', 'GA058', '2025-12-02', '11:00:00', '2025-12-02', '12:00:00'),
+('TA020', 'GA068', '2025-12-02', '13:00:00', '2025-12-02', '14:30:00');
+
+INSERT INTO Toa VALUES
+('TA020_01', N'Giường nằm', 'TA020'),
+('TA020_02', N'Ghế mềm', 'TA020'),
+('TA020_03', N'VIP', 'TA020');
+
+SET @i=1; WHILE @i<=32 BEGIN INSERT INTO Ghe VALUES(@i,'TA020_01',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=64 BEGIN INSERT INTO Ghe VALUES(@i,'TA020_02',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=20 BEGIN INSERT INTO Ghe VALUES(@i,'TA020_03',1); SET @i=@i+1; END;
+
+
+-- ====================== TA021 ======================
+INSERT INTO ChuyenTau VALUES ('TA021', 'GA075', 'GA099', '2025-12-03', '06:00:00', '2025-12-03', '14:30:00');
+INSERT INTO ChuyenTau_Ga VALUES
+('TA021', 'GA085', '2025-12-03', '08:00:00', '2025-12-03', '09:30:00'),
+('TA021', 'GA095', '2025-12-03', '11:00:00', '2025-12-03', '12:30:00');
+
+INSERT INTO Toa VALUES
+('TA021_01', N'Giường nằm', 'TA021'),
+('TA021_02', N'Ghế mềm', 'TA021'),
+('TA021_03', N'VIP', 'TA021');
+
+SET @i=1; WHILE @i<=32 BEGIN INSERT INTO Ghe VALUES(@i,'TA021_01',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=64 BEGIN INSERT INTO Ghe VALUES(@i,'TA021_02',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=20 BEGIN INSERT INTO Ghe VALUES(@i,'TA021_03',1); SET @i=@i+1; END;
+
+
+-- ====================== TA022 ======================
+INSERT INTO ChuyenTau VALUES ('TA022', 'GA099', 'GA132', '2025-12-04', '07:00:00', '2025-12-04', '18:00:00');
+INSERT INTO ChuyenTau_Ga VALUES
+('TA022', 'GA110', '2025-12-04', '09:00:00', '2025-12-04', '10:30:00'),
+('TA022', 'GA120', '2025-12-04', '12:00:00', '2025-12-04', '13:30:00');
+
+INSERT INTO Toa VALUES
+('TA022_01', N'Giường nằm', 'TA022'),
+('TA022_02', N'Ghế mềm', 'TA022'),
+('TA022_03', N'VIP', 'TA022');
+
+SET @i=1; WHILE @i<=32 BEGIN INSERT INTO Ghe VALUES(@i,'TA022_01',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=64 BEGIN INSERT INTO Ghe VALUES(@i,'TA022_02',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=20 BEGIN INSERT INTO Ghe VALUES(@i,'TA022_03',1); SET @i=@i+1; END;
+
+
+-- ====================== TA023 ======================
+INSERT INTO ChuyenTau VALUES ('TA023', 'GA132', 'GA169', '2025-12-05', '06:00:00', '2025-12-05', '17:00:00');
+INSERT INTO ChuyenTau_Ga VALUES
+('TA023', 'GA150', '2025-12-05', '08:00:00', '2025-12-05', '09:30:00'),
+('TA023', 'GA160', '2025-12-05', '10:00:00', '2025-12-05', '12:00:00');
+
+INSERT INTO Toa VALUES
+('TA023_01', N'Giường nằm', 'TA023'),
+('TA023_02', N'Ghế mềm', 'TA023'),
+('TA023_03', N'VIP', 'TA023');
+
+SET @i=1; WHILE @i<=32 BEGIN INSERT INTO Ghe VALUES(@i,'TA023_01',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=64 BEGIN INSERT INTO Ghe VALUES(@i,'TA023_02',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=20 BEGIN INSERT INTO Ghe VALUES(@i,'TA023_03',1); SET @i=@i+1; END;
+
+
+-- ====================== TA024 ======================
+INSERT INTO ChuyenTau VALUES ('TA024', 'GA169', 'GA173', '2025-12-06', '08:00:00', '2025-12-06', '12:00:00');
+INSERT INTO ChuyenTau_Ga VALUES
+('TA024', 'GA170', '2025-12-06', '09:00:00', '2025-12-06', '09:30:00'),
+('TA024', 'GA171', '2025-12-06', '10:00:00', '2025-12-06', '10:30:00');
+
+INSERT INTO Toa VALUES
+('TA024_01', N'Ghế mềm', 'TA024'),
+('TA024_02', N'Ghế mềm', 'TA024'),
+('TA024_03', N'VIP', 'TA024');
+
+SET @i=1; WHILE @i<=64 BEGIN INSERT INTO Ghe VALUES(@i,'TA024_01',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=64 BEGIN INSERT INTO Ghe VALUES(@i,'TA024_02',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=20 BEGIN INSERT INTO Ghe VALUES(@i,'TA024_03',1); SET @i=@i+1; END;
+
+
+-- ====================== TA025 ======================
+INSERT INTO ChuyenTau VALUES ('TA025', 'GA173', 'GA001', '2025-12-07', '06:00:00', '2025-12-08', '18:00:00');
+INSERT INTO ChuyenTau_Ga VALUES
+('TA025', 'GA132', '2025-12-07', '12:00:00', '2025-12-07', '13:30:00'),
+('TA025', 'GA099', '2025-12-07', '15:00:00', '2025-12-07', '17:30:00');
+
+INSERT INTO Toa VALUES
+('TA025_01', N'Giường nằm', 'TA025'),
+('TA025_02', N'Ghế mềm', 'TA025'),
+('TA025_03', N'VIP', 'TA025');
+
+SET @i=1; WHILE @i<=32 BEGIN INSERT INTO Ghe VALUES(@i,'TA025_01',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=64 BEGIN INSERT INTO Ghe VALUES(@i,'TA025_02',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=20 BEGIN INSERT INTO Ghe VALUES(@i,'TA025_03',1); SET @i=@i+1; END;
+
+
+-- ====================== TA026 ======================
+INSERT INTO ChuyenTau VALUES ('TA026', 'GA001', 'GA045', '2025-12-08', '08:00:00', '2025-12-08', '20:00:00');
+INSERT INTO ChuyenTau_Ga VALUES
+('TA026', 'GA020', '2025-12-08', '09:00:00', '2025-12-08', '09:30:00'),
+('TA026', 'GA035', '2025-12-08', '12:00:00', '2025-12-08', '14:00:00');
+
+INSERT INTO Toa VALUES
+('TA026_01', N'Giường nằm', 'TA026'),
+('TA026_02', N'Ghế mềm', 'TA026'),
+('TA026_03', N'VIP', 'TA026');
+
+SET @i=1; WHILE @i<=32 BEGIN INSERT INTO Ghe VALUES(@i,'TA026_01',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=64 BEGIN INSERT INTO Ghe VALUES(@i,'TA026_02',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=20 BEGIN INSERT INTO Ghe VALUES(@i,'TA026_03',1); SET @i=@i+1; END;
+
+
+-- ====================== TA027 ======================
+INSERT INTO ChuyenTau VALUES ('TA027', 'GA045', 'GA120', '2025-12-09', '10:00:00', '2025-12-09', '22:00:00');
+INSERT INTO ChuyenTau_Ga VALUES
+('TA027', 'GA085', '2025-12-09', '12:00:00', '2025-12-09', '13:30:00'),
+('TA027', 'GA099', '2025-12-09', '14:00:00', '2025-12-09', '15:30:00');
+
+INSERT INTO Toa VALUES
+('TA027_01', N'Giường nằm', 'TA027'),
+('TA027_02', N'Ghế mềm', 'TA027'),
+('TA027_03', N'VIP', 'TA027');
+
+SET @i=1; WHILE @i<=32 BEGIN INSERT INTO Ghe VALUES(@i,'TA027_01',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=64 BEGIN INSERT INTO Ghe VALUES(@i,'TA027_02',1); SET @i=@i+1; END;
+SET @i=1; WHILE @i<=20 BEGIN INSERT INTO Ghe VALUES(@i,'TA027_03',1); SET @i=@i+1; END;
+
 
 -- Thêm 5 khách hàng
 INSERT INTO KhachHang (maKH, tenKH, email, sdt, cccd) VALUES
