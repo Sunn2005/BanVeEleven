@@ -1,3 +1,4 @@
+
 package gui;
 
 import java.awt.Color;
@@ -529,7 +530,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 		String matKhau = passwordField.getText();
 	    
 	    // Mã hóa mật khẩu bằng BCrypt
-	    String matKhauMaHoa = BCrypt.hashpw(matKhau, BCrypt.gensalt());
+//	    String matKhauMaHoa = BCrypt.hashpw(matKhau, BCrypt.gensalt());
 	    
 	    // Xác định chức vụ từ comboBox
 	    int chucVu = comboBox_PhanQuyen.getSelectedIndex() == 0 ? 1 : 2;
@@ -541,7 +542,7 @@ public class QuanLyTaiKhoan_GUI extends JPanel  implements ActionListener,MouseL
 	    String maNV = textField_MaNV.getText();
 
 	    // Tạo đối tượng TaiKhoan với mật khẩu đã mã hóa
-	    TaiKhoan tk = new TaiKhoan(maDN, matKhauMaHoa, chucVu, new NhanVien(maNV));
+	    TaiKhoan tk = new TaiKhoan(maDN, matKhau, chucVu, new NhanVien(maNV));
 	    
 	    return tk;
 	}
