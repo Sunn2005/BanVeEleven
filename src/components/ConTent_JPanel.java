@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -26,6 +27,10 @@ public class ConTent_JPanel extends JPanel {
 	    JLabel backGroundLabel = new JLabel(new ImageIcon(scaledBG));
 	    backGroundLabel.setBounds(0 ,0 , 1469, 575); // Cập nhật kích thước trên JLabel
 		add(backGroundLabel);
+	}
+	public static void main(String[] args) {
+		ConTent_JPanel h = new ConTent_JPanel();
+		h.setVisible(true);
 	}
 
 }

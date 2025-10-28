@@ -422,6 +422,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    		lblNewLabel_2_1_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 	    		lblNewLabel_2_1_1_1_1_1.setBounds(227, 220, 105, 25);
 	    		contentPane1.add(lblNewLabel_2_1_1_1_1_1);
+
 	    		lb_MaNV = new JLabel();
 	    		lb_MaNV.setText(nhanVien_DAO.getNhanVienTheoMaNV((taiKhoan_DAO.getTaiKhoanTheoMaTK(dangNhap.getTaiKhoanLogined().getMaTaiKhoan()))
 	    				.getNhanVien().getMaNV()).getMaNV());
@@ -597,8 +598,8 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    
 	    
 	    lbl_ThongTinNV = new JLabel();
-	    lbl_ThongTinNV.setText(nhanVien_DAO.getNhanVienTheoMaNV((taiKhoan_DAO.getTaiKhoanTheoMaTK(dangNhap.getTaiKhoanLogined().getMaTaiKhoan()))
-	    															.getNhanVien().getMaNV()).getTenNV());
+	    lbl_ThongTinNV.setText((nhanVien_DAO.getNhanVienTheoMaNV(dangNhap.getTaiKhoanLogined().getNhanVien().getMaNV()))
+	    															.getTenNV());
 	    lbl_ThongTinNV.setFont(new Font("Tahoma", Font.PLAIN, 16));
 	    lbl_ThongTinNV.setHorizontalAlignment(SwingConstants.CENTER);
 	    lbl_ThongTinNV.setBounds(18, 91, 231, 21);

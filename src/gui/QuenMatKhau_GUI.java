@@ -1,4 +1,4 @@
-package gui;
+		package gui;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -117,13 +117,6 @@ public class QuenMatKhau_GUI extends JFrame {
 			}
 		});
 
-//		// Logo
-//		ImageIcon originalLogo = new ImageIcon(getClass().getResource("/img/LogoDepHonTrang.png"));
-//		Image scaledLogo = originalLogo.getImage().getScaledInstance(120, 70, Image.SCALE_SMOOTH); 
-//
-//		JLabel logoLabel = new JLabel(new ImageIcon(scaledLogo));
-//		logoLabel.setBounds(10, 10, 120, 70); // Cập nhật kích thước trên JLabel
-//		contentPane.add(logoLabel);
 
 		// User Icon
 		ImageIcon originalUserIcon = new ImageIcon(getClass().getResource("/img/user-icon.png"));
@@ -300,7 +293,7 @@ public class QuenMatKhau_GUI extends JFrame {
 		contentPane.add(txtRePassword);
 
 		titleLabel = new JLabel("VUI LÒNG NHẬP ĐẦY ĐỦ CÁC THÔNG TIN PHÍA DƯỚI");
-		titleLabel.setForeground(new Color(240, 128, 128));
+		titleLabel.setForeground(new Color(128, 0, 32)); // Maroon
 		titleLabel.setBounds(198, 36, 528, 30);
 		titleLabel.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 20));
 		contentPane.add(titleLabel);
@@ -417,8 +410,7 @@ public class QuenMatKhau_GUI extends JFrame {
 								if (nhanVien_DAO.getNhanVienTheoMaNV(taiKhoan.getNhanVien().getMaNV()).isTrangThai()) {
 									if(pass.equals(rePass)) {
 										// Nhập thông tin thành công
-										String matKhauMaHoa = BCrypt.hashpw(pass, BCrypt.gensalt());
-										dsTK.updatePassword(matKhauMaHoa, user);
+										dsTK.updatePassword(pass, user);
 										JOptionPane.showMessageDialog(contentPane, "Cập nhật mật khẩu thành công");
 										setVisible(false);
 										DangNhap_GUI dn_GUI= new DangNhap_GUI();
@@ -515,7 +507,7 @@ public class QuenMatKhau_GUI extends JFrame {
 		contentPane.add(lblContact);
 
 		// Footer
-		JLabel lblFooter = new JLabel("ĐTHP | Group 5 | DHKTPM18ATT - 422000422703");
+		JLabel lblFooter = new JLabel("Eleven | Group 11 | DHKTPM19BTT - 422000422704");
 		lblFooter.setBounds(305, 532, 316, 21);
 		lblFooter.setForeground(Color.WHITE);
 		lblFooter.setFont(new Font("Arial", Font.PLAIN, 13));
@@ -609,9 +601,9 @@ public class QuenMatKhau_GUI extends JFrame {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				// Thông tin quản lý
-				String tenQuanLy = "Lê Tấn Phong";
-				String emailQuanLy = "letanphong400@gmail.com";
-				String soDienThoaiQuanLy = "0919 128 639";
+				String tenQuanLy = "Trần Thanh Xuân";
+				String emailQuanLy = "tranthanhxuan205@gmail.com";
+				String soDienThoaiQuanLy = "0919 1919 119";
 
 				// Hiển thị JOptionPane chứa thông tin quản lý
 				JOptionPane
