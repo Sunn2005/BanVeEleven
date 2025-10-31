@@ -318,6 +318,7 @@ public class DangNhap_GUI extends JFrame {
 		lblQuenMK.addMouseListener(new java.awt.event.MouseAdapter() {
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
+			
 			public void mouseEntered(java.awt.event.MouseEvent evt) {
 				lblQuenMK.setForeground(hoverLabelColor); // Thay đổi màu khi đưa chuột vào
 
