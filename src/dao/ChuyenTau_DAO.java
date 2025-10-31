@@ -95,21 +95,6 @@ public class ChuyenTau_DAO {
         return n > 0;
     } 
            
-    public boolean delete(String maTau) { 
-        ConnectDB.getInstance();
-		Connection con = ConnectDB.getConnection(); 
-        PreparedStatement stmt = null; 
-        int n = 0; 
-        try { 
-            stmt = con.prepareStatement("delete from ChuyenTau where maTau = ?"); 
-            stmt.setString(1, maTau); 
-            n = stmt.executeUpdate(); 
-        } catch (SQLException e) { 
-            e.printStackTrace(); 
-        } 
-        
-        return n > 0;
-    }
 
     public ChuyenTau getChuyenTauTheoMaTau(String maTau) { 
         ConnectDB.getInstance();
@@ -232,6 +217,120 @@ public class ChuyenTau_DAO {
         
         return dsChuyenTau; 
     }
+    
+
+ // Thêm vào ChuyenTau_DAO.java
+
+ // Phương thức thêm toa
+ public boolean themToa(String maToa, String loaiToa, String maTau) {
+     ConnectDB.getInstance();
+     Connection con = ConnectDB.getConnection();
+     PreparedStatement stmt = null;
+     int n = 0;
+     
+     try {
+         String sql = "INSERT INTO Toa (maToa, loaiToa, maTau) VALUES (?, ?, ?)";
+         stmt = con.prepareStatement(sql);
+         stmt.setString(1, maToa);
+         stmt.setString(2, loaiToa);
+         stmt.setString(3, maTau);
+         
+         n = stmt.executeUpdate();
+     } catch (SQLException e) {
+         e.printStackTrace();
+     } finally {
+         try {
+             if (stmt != null) stmt.close();
+         } catch (SQLException e) {
+             e.printStackTrace();
+         }
+     }
+     return n > 0;
+ }
+
+ // Phương thức thêm ghế cho toa
+ public boolean themGheChoToa(String maToa, int soLuongGhe) {
+     ConnectDB.getInstance();
+     Connection con = ConnectDB.getConnection();
+     PreparedStatement stmt = null;
+     int totalInserted = 0;
+     
+     try {
+         String sql = "INSERT INTO Ghe (soGhe, maToa, trangThai) VALUES (?, ?, 1)";
+         stmt = con.prepareStatement(sql);
+         
+         for (int i = 1; i <= soLuongGhe; i++) {
+             stmt.setInt(1, i);
+             stmt.setString(2, maToa);
+             totalInserted += stmt.executeUpdate();
+         }
+     } catch (SQLException e) {
+         e.printStackTrace();
+     } finally {
+         try {
+             if (stmt != null) stmt.close();
+         } catch (SQLException e) {
+             e.printStackTrace();
+         }
+     }
+     return totalInserted == soLuongGhe;
+ }
+
+ // Phương thức xóa CASCADE: Ghế -> Toa -> ChuyenTau
+ public boolean delete(String maTau) {
+     Connection con = ConnectDB.getConnection();
+     PreparedStatement stmt = null;
+     
+     try {
+         // Bắt đầu transaction
+         con.setAutoCommit(false);
+         
+         // 1. Xóa tất cả ghế của các toa thuộc chuyến tàu
+         stmt = con.prepareStatement(
+             "DELETE FROM Ghe WHERE maToa IN (SELECT maToa FROM Toa WHERE maTau = ?)"
+         );
+         stmt.setString(1, maTau);
+         stmt.executeUpdate();
+         stmt.close();
+         
+         // 2. Xóa tất cả toa của chuyến tàu
+         stmt = con.prepareStatement("DELETE FROM Toa WHERE maTau = ?");
+         stmt.setString(1, maTau);
+         stmt.executeUpdate();
+         stmt.close();
+         
+         // 3. Xóa các trạm dừng trong ChuyenTau_Ga
+         stmt = con.prepareStatement("DELETE FROM ChuyenTau_Ga WHERE maTau = ?");
+         stmt.setString(1, maTau);
+         stmt.executeUpdate();
+         stmt.close();
+         
+         // 4. Xóa chuyến tàu
+         stmt = con.prepareStatement("DELETE FROM ChuyenTau WHERE maTau = ?");
+         stmt.setString(1, maTau);
+         int n = stmt.executeUpdate();
+         
+         // Commit transaction
+         con.commit();
+         return n > 0;
+         
+     } catch (SQLException e) {
+         try {
+             con.rollback(); // Rollback nếu có lỗi
+         } catch (SQLException ex) {
+             ex.printStackTrace();
+         }
+         e.printStackTrace();
+         return false;
+     } finally {
+         try {
+             con.setAutoCommit(true);
+             if (stmt != null) stmt.close();
+         } catch (SQLException e) {
+             e.printStackTrace();
+         }
+     }
+ }
     public void reset() {
         dsChuyenTau.removeAll(dsChuyenTau);
     }
