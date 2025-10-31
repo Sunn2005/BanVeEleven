@@ -45,6 +45,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -106,7 +107,9 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	private JPanel contentPane1;
 	private JLabel lb_TenNV,lb_MaNV,lb_NgaySinh,lb_CCCD,lb_Email,lb_SDT,lb_ChucVu,userIconLabel1;
 	protected JDialog dialog;
-	private JMenu traCuuCT;
+	private JMenuItem traCuuCT;
+	private JMenu chuyenTau;
+	private JMenuItem qlChuyenTau;
 	
 	public TrangChu_GUI(DangNhap_GUI dangNhap) {
 		this.dangNhap = dangNhap;
@@ -293,10 +296,31 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		});
 		hoaDon.add(xemcthd);
 		
-		traCuuCT = new JMenu("Chuyến tàu");
-		traCuuCT.setFont(new Font("Segoe UI", Font.BOLD, 20));
-		traCuuCT.setPreferredSize(new Dimension(146, 30));
-		menuBar.add(traCuuCT);
+		chuyenTau = new JMenu("Chuyến tàu");
+		chuyenTau.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		chuyenTau.setPreferredSize(new Dimension(146, 30));
+		menuBar.add(chuyenTau);
+		qlChuyenTau = new JMenuItem("Quản lý chuyến tàu");
+		chuyenTau.add(qlChuyenTau);
+	
+		traCuuCT = new JMenuItem("Tra cứu giá vé tàu");
+		chuyenTau.add(traCuuCT);
+		
+	
+		
+		qlChuyenTau.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        if(click) {
+		            QuanLyChuyenTau_GUI qlct = new QuanLyChuyenTau_GUI(TrangChu_GUI.this);
+		            content.removeAll();
+		            content.add(qlct);
+		            content.revalidate();
+		            content.repaint();
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Vui lòng nhấn vào ca làm", "Thông báo", JOptionPane.WARNING_MESSAGE);
+		        }
+		    }
+		});
 		
 		
 		thongKe = new JMenu("Thống kê");
@@ -545,7 +569,8 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 				}
 			});
 
-	    		
+
+
 	    		btn_KetCa = new RoundedButton("Kết ca", 10);
 	    		btn_KetCa.setForeground(new Color(255, 255, 255));
 	    		btn_KetCa.setBackground(new Color(51, 102, 153));
@@ -595,6 +620,8 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	            dialog.setVisible(true);
 	        }
 	    });
+	    
+
 	    
 	    
 	    lbl_ThongTinNV = new JLabel();
@@ -663,6 +690,24 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    		exitIconLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	    	}}
 	    		);
+	    TaiKhoan tk = dangNhap.getTaiKhoanLogined();
+	    int phanQuyen = tk.getPhanQuyen();
+
+	    if (phanQuyen == 1) { // 1 = Quản lý
+	        // Gỡ toàn bộ sự kiện click
+	        for (MouseListener ml : userIconLabel.getMouseListeners()) {
+	            userIconLabel.removeMouseListener(ml);
+	        }
+	        for (MouseMotionListener mml : userIconLabel.getMouseMotionListeners()) {
+	            userIconLabel.removeMouseMotionListener(mml);
+	        }
+
+	        // Đổi con trỏ chuột về mặc định
+	        userIconLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
+	        // Quản lý được xem như đã vào ca sẵn
+	        click = true;
+	    }
 		content = new JPanel();
 		content.setBounds(0, 200, 1470, 575);
 		content.setLayout(new GridLayout());
@@ -671,10 +716,10 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		
 		ConTent_JPanel jpct = new ConTent_JPanel();
 		content.add(jpct);
-		traCuuCT.addMenuListener(new MenuListener() {
+		traCuuCT.addActionListener(new ActionListener() {
 
 			@Override
-			public void menuSelected(MenuEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if(click) {
 					ChuyenTau_Gui tcvct = new ChuyenTau_Gui(TrangChu_GUI.this);
@@ -687,17 +732,6 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 				}
 			}
 
-			@Override
-			public void menuDeselected(MenuEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void menuCanceled(MenuEvent e) {
-				// TODO Auto-generated method stub
-
-			}
 		});
 
 
