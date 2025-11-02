@@ -1,2 +1,7 @@
-/gui/
+/components/
+/connectDB/
 /dao/
+/entity/
+/font/
+/gui/
+/img/

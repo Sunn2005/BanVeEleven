@@ -64,7 +64,7 @@ public class DangNhap_GUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 905, 600);
 		setLocationRelativeTo(null);
-		setTitle("Quản lý nhà ga Eleven");
+		setTitle("Quản lý nhà ga Eleven DUMAMAY");
 		setResizable(false);
 
 		contentPane = new JPanel() {
@@ -374,4 +374,5 @@ public class DangNhap_GUI extends JFrame {
 	public void setTaiKhoanLogined(TaiKhoan taiKhoanLogined) {
 		this.taiKhoanLogined = taiKhoanLogined;
 	}
+
 }

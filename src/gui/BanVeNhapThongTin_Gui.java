@@ -141,63 +141,63 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 				trangChu.content.repaint();
 			}
 		});
-		
+//
 		// Khởi tạo tabbedPane
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(46, 61, 1373, 151);
 		add(tabbedPane);
 		tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 15));
-				
+//
 		jp_KHMV = new JPanel();
 		jp_KHMV.setBackground(SystemColor.textHighlightText);
 		tabbedPane.addTab("Khách hàng mua vé", null, jp_KHMV, null);
 		jp_KHMV.setLayout(null);
-		
+
 		JPanel jp_content_KHMV = new JPanel();
 		jp_content_KHMV.setLayout(null);
 		jp_content_KHMV.setBounds(10, 10, 1345, 98);
 		jp_KHMV.add(jp_content_KHMV);
-		
+
 		JLabel lb_Ten_KHMV = new JLabel("Họ và tên");
 		lb_Ten_KHMV.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lb_Ten_KHMV.setBounds(75, 15, 96, 25);
 		jp_content_KHMV.add(lb_Ten_KHMV);
-		
+
 		JLabel lb_Email_KHMV = new JLabel("Email");
 		lb_Email_KHMV.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lb_Email_KHMV.setBounds(75, 56, 96, 22);
 		jp_content_KHMV.add(lb_Email_KHMV);
-		
+
 		textField_Ten_KHMV = new JTextField();
 		textField_Ten_KHMV.setColumns(10);
 		textField_Ten_KHMV.setBounds(224, 17, 264, 25);
 		jp_content_KHMV.add(textField_Ten_KHMV);
-		
+
 		textField_Email_KHMV = new JTextField();
 		textField_Email_KHMV.setColumns(10);
 		textField_Email_KHMV.setBounds(224, 57, 264, 25);
 		jp_content_KHMV.add(textField_Email_KHMV);
-		
+
 		JLabel lb_SDT_KHMV = new JLabel("Số điện thoại");
 		lb_SDT_KHMV.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lb_SDT_KHMV.setBounds(601, 12, 143, 25);
 		jp_content_KHMV.add(lb_SDT_KHMV);
-		
+
 		JLabel lb_CCCD_KHMV = new JLabel("CCCD/ Hộ chiếu");
 		lb_CCCD_KHMV.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lb_CCCD_KHMV.setBounds(601, 53, 143, 25);
 		jp_content_KHMV.add(lb_CCCD_KHMV);
-		
+
 		textField_SDT_KHMV = new JTextField();
 		textField_SDT_KHMV.setColumns(10);
 		textField_SDT_KHMV.setBounds(814, 12, 264, 25);
 		jp_content_KHMV.add(textField_SDT_KHMV);
-		
+
 		textField_CCCD_KHMV = new JTextField();
 		textField_CCCD_KHMV.setColumns(10);
 		textField_CCCD_KHMV.setBounds(814, 50, 264, 25);
 		jp_content_KHMV.add(textField_CCCD_KHMV);
-		
+
 		bt_Chuyen = new RoundedButton("Chuyển", 15);
 		bt_Chuyen.setForeground(Color.WHITE);
 		bt_Chuyen.setFont(new Font("Tahoma", Font.BOLD, 16));
