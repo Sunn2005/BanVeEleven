@@ -73,6 +73,7 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 	private ArrayList<KhachHang> list = dskh.docTuBang();
 	private JButton bt_Chuyen;
 	private JButton bt_ThanhToan_KHSDV, bt_XacNhan_KHSDV;
+	private JButton btn_XacNhan; // NEW: nút thanh toán ở tab KHMV
 	public BanVe_GUI banVe_GUI;
 	public DoiVe_GUI doiVe_GUI;
 	
@@ -198,104 +199,157 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		textField_CCCD_KHMV.setBounds(814, 50, 264, 25);
 		jp_content_KHMV.add(textField_CCCD_KHMV);
 
-		bt_Chuyen = new RoundedButton("Chuyển", 15);
-		bt_Chuyen.setForeground(Color.WHITE);
-		bt_Chuyen.setFont(new Font("Tahoma", Font.BOLD, 16));
-		bt_Chuyen.setBackground(new Color(51, 102, 153));
-		bt_Chuyen.addActionListener(new ActionListener() {
+//		bt_Chuyen = new RoundedButton("Chuyển", 15);
+//		bt_Chuyen.setForeground(Color.WHITE);
+//		bt_Chuyen.setFont(new Font("Tahoma", Font.BOLD, 16));
+//		bt_Chuyen.setBackground(new Color(51, 102, 153));
+//		bt_Chuyen.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				tabbedPane.setSelectedIndex(1);
+//				textField_Ten_KHSDV.setText(textField_Ten_KHMV.getText());
+//				textField_Email_KHSDV.setText(textField_Email_KHMV.getText());
+//				textField_SDT_KHSDV.setText(textField_SDT_KHMV.getText());
+//				textField_CCCD_KHSDV.setText(textField_CCCD_KHMV.getText());
+//			}
+//		});
+//		bt_Chuyen.setBounds(1020, 24, 120, 40);
+//		jp_content_KHMV.add(bt_Chuyen);
+//
+		// NEW: Thêm nút "Thanh toán" vào tab KHMV
+		btn_XacNhan = new RoundedButton("Xác nhận", 15);
+		btn_XacNhan.setForeground(Color.WHITE);
+		btn_XacNhan.setFont(new Font("Tahoma", Font.BOLD, 16));
+		btn_XacNhan.setBackground(new Color(51, 102, 153));
+		btn_XacNhan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tabbedPane.setSelectedIndex(1);
-				textField_Ten_KHSDV.setText(textField_Ten_KHMV.getText());
-				textField_Email_KHSDV.setText(textField_Email_KHMV.getText());
-				textField_SDT_KHSDV.setText(textField_SDT_KHMV.getText());
-				textField_CCCD_KHSDV.setText(textField_CCCD_KHMV.getText());
+				// Validate thông tin khách hàng mua vé
+				if (!isValidKHMV()) {
+					return;
+				}
+
+				// Kiểm tra có vé không
+				if (banVe_GUI == null || banVe_GUI.dsVeDatTam.size() == 0) {
+					JOptionPane.showMessageDialog(null, "Chưa có vé được đặt");
+					return;
+				}
+
+				// Tạo hoặc lấy khách hàng mua vé
+				KhachHang khachHangExist = list.stream()
+					.filter(kh -> textField_SDT_KHMV.getText().equals(kh.getSdt()))
+					.findFirst()
+					.orElse(null);
+
+				KhachHang buyer = new KhachHang(
+					khachHangExist != null ? khachHangExist.getMaKH() : generateMaKH(),
+					textField_Ten_KHMV.getText(),
+					textField_Email_KHMV.getText(),
+					textField_SDT_KHMV.getText(),
+					textField_CCCD_KHMV.getText()
+				);
+
+				// Cập nhật tất cả các hàng trong bảng với thông tin khách hàng mua vé
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
+				for (int i = 0; i < banVe_GUI.dsVeDatTam.size(); i++) {
+					map.put(i, buyer);
+					banVe_GUI.dsVeDatTam.get(i).setKhuyenMai("Người lớn"); // Mặc định
+
+					// Cập nhật bảng
+					model.setValueAt(buyer.getTenKH(), i, 1); // Tên khách hàng
+					model.setValueAt("Người lớn", i, 2); // Đối tượng
+					float basePrice = (float) model.getValueAt(i, 4);
+					model.setValueAt(0f, i, 5); // Giảm đối tượng
+					model.setValueAt(basePrice, i, 6); // Thành tiền
+				}
+
+				JOptionPane.showMessageDialog(null, "Đã cập nhật thông tin khách hàng cho vé!");
 			}
 		});
-		bt_Chuyen.setBounds(1160, 24, 120, 40);
-		jp_content_KHMV.add(bt_Chuyen);
+		btn_XacNhan.setBounds(1160, 24, 120, 40);
+		jp_content_KHMV.add(btn_XacNhan);
+
 		
-		// Tab khách hàng sử dụng vé
-		jp_KHSDV = new JPanel();
-		jp_KHSDV.setBackground(SystemColor.textHighlightText);
-		tabbedPane.addTab("Khách hàng sử dụng vé", null, jp_KHSDV, null);
-		jp_KHSDV.setLayout(null);
-		
-		JPanel jp_content_KHSDV = new JPanel();
-		jp_content_KHSDV.setLayout(null);
-		jp_content_KHSDV.setBounds(10, 10, 1345, 98);
-		jp_KHSDV.add(jp_content_KHSDV);
-		
-		JLabel lb_Ten_KHSDV = new JLabel("Họ và tên");
-		lb_Ten_KHSDV.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lb_Ten_KHSDV.setBounds(75, 15, 96, 25);
-		jp_content_KHSDV.add(lb_Ten_KHSDV);
-		
-		JLabel lb_Email_KHSDV = new JLabel("Email");
-		lb_Email_KHSDV.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lb_Email_KHSDV.setBounds(75, 56, 96, 22);
-		jp_content_KHSDV.add(lb_Email_KHSDV);
-		
-		textField_Ten_KHSDV = new JTextField();
-		textField_Ten_KHSDV.setColumns(10);
-		textField_Ten_KHSDV.setBounds(224, 17, 264, 25);
-		jp_content_KHSDV.add(textField_Ten_KHSDV);
-		
-		textField_Email_KHSDV = new JTextField();
-		textField_Email_KHSDV.setColumns(10);
-		textField_Email_KHSDV.setBounds(224, 57, 264, 25);
-		jp_content_KHSDV.add(textField_Email_KHSDV);
-		
-		JLabel lb_SDT_KHSDV = new JLabel("Số điện thoại");
-		lb_SDT_KHSDV.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lb_SDT_KHSDV.setBounds(601, 12, 143, 25);
-		jp_content_KHSDV.add(lb_SDT_KHSDV);
-		
-		JLabel lb_CCCD_KHSDV = new JLabel("CCCD/ Hộ chiếu");
-		lb_CCCD_KHSDV.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lb_CCCD_KHSDV.setBounds(601, 53, 143, 25);
-		jp_content_KHSDV.add(lb_CCCD_KHSDV);
-		
-		textField_SDT_KHSDV = new JTextField();
-		textField_SDT_KHSDV.setColumns(10);
-		textField_SDT_KHSDV.setBounds(814, 12, 264, 25);
-		jp_content_KHSDV.add(textField_SDT_KHSDV);
-		
-		textField_CCCD_KHSDV = new JTextField();
-		textField_CCCD_KHSDV.setColumns(10);
-		textField_CCCD_KHSDV.setBounds(814, 50, 264, 25);
-		jp_content_KHSDV.add(textField_CCCD_KHSDV);
-		
-		bt_XacNhan_KHSDV = new RoundedButton("Nhập", 10);
-		bt_XacNhan_KHSDV.setForeground(Color.WHITE);
-		bt_XacNhan_KHSDV.setBackground(new Color(51, 102, 153));
-		bt_XacNhan_KHSDV.setBounds(1245, 303, 118, 25);
-		bt_XacNhan_KHSDV.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                	if (isValidTxt()) {
-                		DefaultTableModel model = (DefaultTableModel) table.getModel();
-                		KhachHang khachHangExist = list.stream().filter(kh -> textField_SDT_KHSDV.getText().equals(kh.getSdt())).findFirst().orElse(null);
-                		if (khachHangExist!=null) {
-                			map.put(selectedRow, khachHangExist);
-                		} else {    					
-                			KhachHang khachHang = new KhachHang("KH0000", textField_Ten_KHSDV.getText(), textField_Email_KHSDV.getText(), textField_SDT_KHSDV.getText(), textField_CCCD_KHSDV.getText());
-                			map.put(selectedRow, khachHang);
-                		}
-                		banVe_GUI.dsVeDatTam.get(selectedRow).setKhuyenMai(table.getValueAt(selectedRow, 2).toString());
-                		model.setValueAt(textField_Ten_KHSDV.getText(), selectedRow, 1);
-                		textField_Ten_KHSDV.setText("");
-                		textField_SDT_KHSDV.setText("");
-                		textField_Email_KHSDV.setText("");
-                		textField_CCCD_KHSDV.setText("");                		
-                	}
-                }
-			}
-		});
-		bt_XacNhan_KHSDV.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		bt_XacNhan_KHSDV.setBounds(1160, 24, 120, 40);
-		jp_content_KHSDV.add(bt_XacNhan_KHSDV);
-			
+//		// Tab khách hàng sử dụng vé
+//		jp_KHSDV = new JPanel();
+//		jp_KHSDV.setBackground(SystemColor.textHighlightText);
+//		tabbedPane.addTab("Khách hàng sử dụng vé", null, jp_KHSDV, null);
+//		jp_KHSDV.setLayout(null);
+//
+//		JPanel jp_content_KHSDV = new JPanel();
+//		jp_content_KHSDV.setLayout(null);
+//		jp_content_KHSDV.setBounds(10, 10, 1345, 98);
+//		jp_KHSDV.add(jp_content_KHSDV);
+//
+//		JLabel lb_Ten_KHSDV = new JLabel("Họ và tên");
+//		lb_Ten_KHSDV.setFont(new Font("Tahoma", Font.BOLD, 16));
+//		lb_Ten_KHSDV.setBounds(75, 15, 96, 25);
+//		jp_content_KHSDV.add(lb_Ten_KHSDV);
+//
+//		JLabel lb_Email_KHSDV = new JLabel("Email");
+//		lb_Email_KHSDV.setFont(new Font("Tahoma", Font.BOLD, 16));
+//		lb_Email_KHSDV.setBounds(75, 56, 96, 22);
+//		jp_content_KHSDV.add(lb_Email_KHSDV);
+//
+//		textField_Ten_KHSDV = new JTextField();
+//		textField_Ten_KHSDV.setColumns(10);
+//		textField_Ten_KHSDV.setBounds(224, 17, 264, 25);
+//		jp_content_KHSDV.add(textField_Ten_KHSDV);
+//
+//		textField_Email_KHSDV = new JTextField();
+//		textField_Email_KHSDV.setColumns(10);
+//		textField_Email_KHSDV.setBounds(224, 57, 264, 25);
+//		jp_content_KHSDV.add(textField_Email_KHSDV);
+//
+//		JLabel lb_SDT_KHSDV = new JLabel("Số điện thoại");
+//		lb_SDT_KHSDV.setFont(new Font("Tahoma", Font.BOLD, 16));
+//		lb_SDT_KHSDV.setBounds(601, 12, 143, 25);
+//		jp_content_KHSDV.add(lb_SDT_KHSDV);
+//
+//		JLabel lb_CCCD_KHSDV = new JLabel("CCCD/ Hộ chiếu");
+//		lb_CCCD_KHSDV.setFont(new Font("Tahoma", Font.BOLD, 16));
+//		lb_CCCD_KHSDV.setBounds(601, 53, 143, 25);
+//		jp_content_KHSDV.add(lb_CCCD_KHSDV);
+//
+//		textField_SDT_KHSDV = new JTextField();
+//		textField_SDT_KHSDV.setColumns(10);
+//		textField_SDT_KHSDV.setBounds(814, 12, 264, 25);
+//		jp_content_KHSDV.add(textField_SDT_KHSDV);
+//
+//		textField_CCCD_KHSDV = new JTextField();
+//		textField_CCCD_KHSDV.setColumns(10);
+//		textField_CCCD_KHSDV.setBounds(814, 50, 264, 25);
+//		jp_content_KHSDV.add(textField_CCCD_KHSDV);
+//
+//		bt_XacNhan_KHSDV = new RoundedButton("Nhập", 10);
+//		bt_XacNhan_KHSDV.setForeground(Color.WHITE);
+//		bt_XacNhan_KHSDV.setBackground(new Color(51, 102, 153));
+//		bt_XacNhan_KHSDV.setBounds(1245, 303, 118, 25);
+//		bt_XacNhan_KHSDV.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				int selectedRow = table.getSelectedRow();
+//                if (selectedRow != -1) {
+//                	if (isValidTxt()) {
+//                		DefaultTableModel model = (DefaultTableModel) table.getModel();
+//                		KhachHang khachHangExist = list.stream().filter(kh -> textField_SDT_KHSDV.getText().equals(kh.getSdt())).findFirst().orElse(null);
+//                		if (khachHangExist!=null) {
+//                			map.put(selectedRow, khachHangExist);
+//                		} else {
+//                			KhachHang khachHang = new KhachHang("KH0000", textField_Ten_KHSDV.getText(), textField_Email_KHSDV.getText(), textField_SDT_KHSDV.getText(), textField_CCCD_KHSDV.getText());
+//                			map.put(selectedRow, khachHang);
+//                		}
+//                		doiVe_GUI.dsVeDatTam.get(selectedRow).setKhuyenMai(table.getValueAt(selectedRow, 2).toString());
+//                		model.setValueAt(textField_Ten_KHSDV.getText(), selectedRow, 1);
+//                		textField_Ten_KHSDV.setText("");
+//                		textField_SDT_KHSDV.setText("");
+//                		textField_Email_KHSDV.setText("");
+//                		textField_CCCD_KHSDV.setText("");
+//                	}
+//                }
+//			}
+//		});
+//		bt_XacNhan_KHSDV.setFont(new Font("Tahoma", Font.PLAIN, 14));
+//		bt_XacNhan_KHSDV.setBounds(1160, 24, 120, 40);
+//		jp_content_KHSDV.add(bt_XacNhan_KHSDV);
+//
 		//JP table
 		jp_Table = new JPanel();
 		jp_Table.setBounds(46, 222, 1373, 338);
@@ -318,7 +372,7 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 				KhachHang khachHang = list.stream().filter(kh -> textField_SDT_KHMV.getText().equals(kh.getSdt())).findFirst().orElse(null);
 				BanVeNhapThongTin_Gui.this.khachHangMua = new KhachHang(khachHang != null?khachHang.getMaKH():generateMaKH(), textField_Ten_KHMV.getText(), textField_Email_KHMV.getText(), textField_SDT_KHMV.getText(), textField_CCCD_KHMV.getText());
 				BanVeThanhToan_GUI banVeThanToan_GUI= new BanVeThanhToan_GUI(BanVeNhapThongTin_Gui.this, trangChu, banVe_GUI);
-				
+
 				//Gán giá trị khuyễn mãi cho các Ve trong ds đặt tạm
 				
 				trangChu.content.removeAll();
@@ -421,7 +475,7 @@ public class BanVeNhapThongTin_Gui extends JPanel{
         table.getColumnModel().getColumn(3).setCellRenderer(new TextAreaRenderer());
 
         chonSdt(textField_SDT_KHMV,textField_Ten_KHMV,textField_Email_KHMV, textField_CCCD_KHMV);
-        chonSdt(textField_SDT_KHSDV,textField_Ten_KHSDV,textField_Email_KHSDV, textField_CCCD_KHSDV);
+//        chonSdt(textField_SDT_KHSDV,textField_Ten_KHSDV,textField_Email_KHSDV, textField_CCCD_KHSDV);
 
         loadThongTin(banVe_GUI.dsVeDatTam);
 	}
@@ -530,22 +584,22 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		lb_SDT_KHMV.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lb_SDT_KHMV.setBounds(601, 12, 143, 25);
 		jp_content_KHMV.add(lb_SDT_KHMV);
-		
+
 		JLabel lb_CCCD_KHMV = new JLabel("CCCD/ Hộ chiếu");
 		lb_CCCD_KHMV.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lb_CCCD_KHMV.setBounds(601, 53, 143, 25);
 		jp_content_KHMV.add(lb_CCCD_KHMV);
-		
+
 		textField_SDT_KHMV = new JTextField();
 		textField_SDT_KHMV.setColumns(10);
 		textField_SDT_KHMV.setBounds(814, 12, 264, 25);
 		jp_content_KHMV.add(textField_SDT_KHMV);
-		
+
 		textField_CCCD_KHMV = new JTextField();
 		textField_CCCD_KHMV.setColumns(10);
 		textField_CCCD_KHMV.setBounds(814, 50, 264, 25);
 		jp_content_KHMV.add(textField_CCCD_KHMV);
-		
+
 		bt_Chuyen = new RoundedButton("Chuyển", 15);
 		bt_Chuyen.setForeground(Color.WHITE);
 		bt_Chuyen.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -563,6 +617,59 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		bt_Chuyen.setBounds(1160, 24, 120, 40);
 		jp_content_KHMV.add(bt_Chuyen);
 		
+		// NEW: Thêm nút "Thanh toán" vào tab KHMV
+		btn_XacNhan = new RoundedButton("Thanh toán", 15);
+		btn_XacNhan.setForeground(Color.WHITE);
+		btn_XacNhan.setFont(new Font("Tahoma", Font.BOLD, 16));
+		btn_XacNhan.setBackground(new Color(51, 102, 153));
+		btn_XacNhan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Validate thông tin khách hàng mua vé
+				if (!isValidKHMV()) {
+					return;
+				}
+
+				// Kiểm tra có vé không
+				if (banVe_GUI == null || banVe_GUI.dsVeDatTam.size() == 0) {
+					JOptionPane.showMessageDialog(null, "Chưa có vé được đặt");
+					return;
+				}
+
+				// Tạo hoặc lấy khách hàng mua vé
+				KhachHang khachHangExist = list.stream()
+					.filter(kh -> textField_SDT_KHMV.getText().equals(kh.getSdt()))
+					.findFirst()
+					.orElse(null);
+
+				KhachHang buyer = new KhachHang(
+					khachHangExist != null ? khachHangExist.getMaKH() : generateMaKH(),
+					textField_Ten_KHMV.getText(),
+					textField_Email_KHMV.getText(),
+					textField_SDT_KHMV.getText(),
+					textField_CCCD_KHMV.getText()
+				);
+
+				// Cập nhật tất cả các hàng trong bảng với thông tin khách hàng mua vé
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
+				for (int i = 0; i < banVe_GUI.dsVeDatTam.size(); i++) {
+					map.put(i, buyer);
+					banVe_GUI.dsVeDatTam.get(i).setKhuyenMai("Người lớn"); // Mặc định
+
+					// Cập nhật bảng
+					model.setValueAt(buyer.getTenKH(), i, 1); // Tên khách hàng
+					model.setValueAt("Người lớn", i, 2); // Đối tượng
+					float basePrice = (float) model.getValueAt(i, 4);
+					model.setValueAt(0f, i, 5); // Giảm đối tượng
+					model.setValueAt(basePrice, i, 6); // Thành tiền
+				}
+
+				JOptionPane.showMessageDialog(null, "Đã cập nhật thông tin khách hàng cho tất cả các vé!");
+			}
+		});
+		btn_XacNhan.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btn_XacNhan.setBounds(1160, 24, 120, 40);
+		jp_content_KHMV.add(btn_XacNhan);
+
 		// Tab khách hàng sử dụng vé
 		jp_KHSDV = new JPanel();
 		jp_KHSDV.setBackground(SystemColor.textHighlightText);
@@ -614,33 +721,33 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		textField_CCCD_KHSDV.setBounds(814, 50, 264, 25);
 		jp_content_KHSDV.add(textField_CCCD_KHSDV);
 		
-		bt_XacNhan_KHSDV = new RoundedButton("Nhập", 10);
-		bt_XacNhan_KHSDV.setForeground(Color.WHITE);
-		bt_XacNhan_KHSDV.setBackground(new Color(51, 102, 153));
-		bt_XacNhan_KHSDV.setBounds(1245, 303, 118, 25);
-		bt_XacNhan_KHSDV.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                	if (isValidTxt()) {
-                		DefaultTableModel model = (DefaultTableModel) table.getModel();
-                		KhachHang khachHangExist = list.stream().filter(kh -> textField_SDT_KHSDV.getText().equals(kh.getSdt())).findFirst().orElse(null);
-                		if (khachHangExist!=null) {
-                			map.put(selectedRow, khachHangExist);
-                		} else {    					
-                			KhachHang khachHang = new KhachHang("KH0000", textField_Ten_KHSDV.getText(), textField_Email_KHSDV.getText(), textField_SDT_KHSDV.getText(), textField_CCCD_KHSDV.getText());
-                			map.put(selectedRow, khachHang);
-                		}
-                		doiVe_GUI.dsVeDatTam.get(selectedRow).setKhuyenMai(table.getValueAt(selectedRow, 2).toString());
-                		model.setValueAt(textField_Ten_KHSDV.getText(), selectedRow, 1);
-                		textField_Ten_KHSDV.setText("");
-                		textField_SDT_KHSDV.setText("");
-                		textField_Email_KHSDV.setText("");
-                		textField_CCCD_KHSDV.setText("");                		
-                	}
-                }
-			}
-		});
+//		bt_XacNhan_KHSDV = new RoundedButton("Nhập", 10);
+//		bt_XacNhan_KHSDV.setForeground(Color.WHITE);
+//		bt_XacNhan_KHSDV.setBackground(new Color(51, 102, 153));
+//		bt_XacNhan_KHSDV.setBounds(1245, 303, 118, 25);
+//		bt_XacNhan_KHSDV.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				int selectedRow = table.getSelectedRow();
+//                if (selectedRow != -1) {
+//                	if (isValidTxt()) {
+//                		DefaultTableModel model = (DefaultTableModel) table.getModel();
+//                		KhachHang khachHangExist = list.stream().filter(kh -> textField_SDT_KHSDV.getText().equals(kh.getSdt())).findFirst().orElse(null);
+//                		if (khachHangExist!=null) {
+//                			map.put(selectedRow, khachHangExist);
+//                		} else {
+//                			KhachHang khachHang = new KhachHang("KH0000", textField_Ten_KHSDV.getText(), textField_Email_KHSDV.getText(), textField_SDT_KHSDV.getText(), textField_CCCD_KHSDV.getText());
+//                			map.put(selectedRow, khachHang);
+//                		}
+//                		doiVe_GUI.dsVeDatTam.get(selectedRow).setKhuyenMai(table.getValueAt(selectedRow, 2).toString());
+//                		model.setValueAt(textField_Ten_KHSDV.getText(), selectedRow, 1);
+//                		textField_Ten_KHSDV.setText("");
+//                		textField_SDT_KHSDV.setText("");
+//                		textField_Email_KHSDV.setText("");
+//                		textField_CCCD_KHSDV.setText("");
+//                	}
+//                }
+//			}
+//		});
 		bt_XacNhan_KHSDV.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		bt_XacNhan_KHSDV.setBounds(1160, 24, 120, 40);
 		jp_content_KHSDV.add(bt_XacNhan_KHSDV);
@@ -655,20 +762,19 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		bt_ThanhToan_KHSDV.setForeground(Color.WHITE);
 		bt_ThanhToan_KHSDV.setBackground(new Color(51, 102, 153));
 		bt_ThanhToan_KHSDV.setBounds(1245, 303, 118, 25);
-		bt_ThanhToan_KHSDV.setBounds(1245, 303, 118, 25);
 		jp_Table.add(bt_ThanhToan_KHSDV);
 		bt_ThanhToan_KHSDV.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		bt_ThanhToan_KHSDV.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (map.size() != doiVe_GUI.dsVeDatTam.size()) {
+				if (map.size() != banVe_GUI.dsVeDatTam.size()) {
 					JOptionPane.showMessageDialog(null, "Chưa nhập đủ khách hàng sử dụng vé");
 					return;
 				}
 				
 				KhachHang khachHang = list.stream().filter(kh -> textField_SDT_KHMV.getText().equals(kh.getSdt())).findFirst().orElse(null);
 				BanVeNhapThongTin_Gui.this.khachHangMua = new KhachHang(khachHang != null?khachHang.getMaKH():generateMaKH(), textField_Ten_KHMV.getText(), textField_Email_KHMV.getText(), textField_SDT_KHMV.getText(), textField_CCCD_KHMV.getText());
-				BanVeThanhToan_GUI banVeThanToan_GUI= new BanVeThanhToan_GUI(BanVeNhapThongTin_Gui.this, trangChu, doiVe_GUI);
-				
+				BanVeThanhToan_GUI banVeThanToan_GUI= new BanVeThanhToan_GUI(BanVeNhapThongTin_Gui.this, trangChu, banVe_GUI);
+
 				//Gán giá trị khuyễn mãi cho các Ve trong ds đặt tạm
 				
 				trangChu.content.removeAll();
@@ -771,11 +877,36 @@ public class BanVeNhapThongTin_Gui extends JPanel{
         table.getColumnModel().getColumn(3).setCellRenderer(new TextAreaRenderer());
 
         chonSdt(textField_SDT_KHMV,textField_Ten_KHMV,textField_Email_KHMV, textField_CCCD_KHMV);
-        chonSdt(textField_SDT_KHSDV,textField_Ten_KHSDV,textField_Email_KHSDV, textField_CCCD_KHSDV);
+//        chonSdt(textField_SDT_KHSDV,textField_Ten_KHSDV,textField_Email_KHSDV, textField_CCCD_KHSDV);
 
         loadThongTin(doiVe_GUI.dsVeDatTam);
 	}
 	
+	private boolean isValidKHMV() {
+		String regexTenKH = "^[A-ZÀ-Ỵ][a-zà-ỹ\\p{L}]*([ ]+[A-ZÀ-Ỵ][a-zà-ỹ\\p{L}]*)*$";
+		String regexEmail = "^[a-zA-Z0-9.]+@gmail\\.com$";
+		String regexSdt = "^(03|05|07|08|09)\\d{8}$";
+		String regexCccd = "^0[0-9]{2}[0-3]\\d{2}\\d{6}$";
+
+		if (!textField_Ten_KHMV.getText().matches(regexTenKH)) {
+			JOptionPane.showMessageDialog(null, "Tên khách hàng mua vé không hợp lệ!");
+			return false;
+		}
+		if (!textField_Email_KHMV.getText().matches(regexEmail)) {
+			JOptionPane.showMessageDialog(null, "Email không hợp lệ!");
+			return false;
+		}
+		if (!textField_SDT_KHMV.getText().matches(regexSdt)) {
+			JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!");
+			return false;
+		}
+		if (!textField_CCCD_KHMV.getText().matches(regexCccd)) {
+			JOptionPane.showMessageDialog(null, "Căn cước công dân hoặc số hộ chiếu không hợp lệ!");
+			return false;
+		}
+		return true;
+	}
+
 	private boolean isValidTxt() {
 		String regexTenKH="^[A-ZÀ-Ỵ][a-zà-ỹ\\p{L}]*([ ]+[A-ZÀ-Ỵ][a-zà-ỹ\\p{L}]*)*$";
 		String regexEmail = "^[a-zA-Z0-9.]+@gmail\\.com$";
@@ -885,3 +1016,4 @@ public class BanVeNhapThongTin_Gui extends JPanel{
 		});
 	}
 }
+
