@@ -84,10 +84,8 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
     private RoundedButton btnSua;
     private RoundedButton btnTim;
     private RoundedButton btnXoa;
-    private Ga_DAO ga = new Ga_DAO();
-    
+
     ChuyenTau tempChuyenTau = new ChuyenTau(""); // Đối tượng tạm thời
-	private RoundedButton btnLamMoi;
 
     public QuanLyChuyenTau_GUI(TrangChu_GUI trangChu) {
         setBackground(SystemColor.text);
@@ -257,14 +255,6 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
         btnTim.setBounds(250, 458, 67, 27);
         jp_contentThongTin.add(btnTim);
         btnTim.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        
-		// Nút Làm mới
-		btnLamMoi = new RoundedButton("Làm mới", 15);
-		btnLamMoi.setForeground(new Color(255, 255, 255));
-		btnLamMoi.setBackground(new Color(51, 102,153));
-		btnLamMoi.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnLamMoi.setBounds(1350, 40, 90, 28);
-		add(btnLamMoi);
 
         // JPanel header tiêu đề
         jp_headerThongTin = new JPanel();
@@ -341,410 +331,132 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
         btnXoa.addActionListener(this);
         btnTim.addActionListener(this);
         table_CT.addMouseListener(this);
-        btnLamMoi.addActionListener(this);
 
         // Load dữ liệu
         loadGa();
         datatoTable();
     }
 
- // Validation đầy đủ
-    public boolean validData() {
-        // 1. Kiểm tra Ga đi
-        if (comboBox_GaDi.getSelectedItem() == null || comboBox_GaDi.getSelectedItem().toString().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "Vui lòng chọn ga đi!", 
-                "Lỗi - Thiếu thông tin", 
-                JOptionPane.WARNING_MESSAGE);
-            comboBox_GaDi.requestFocus();
-            return false;
-        }
-        
-        // 2. Kiểm tra Ga đến
-        if (comboBox_GaDen.getSelectedItem() == null || comboBox_GaDen.getSelectedItem().toString().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "Vui lòng chọn ga đến!", 
-                "Lỗi - Thiếu thông tin", 
-                JOptionPane.WARNING_MESSAGE);
-            comboBox_GaDen.requestFocus();
-            return false;
-        }
-        
-        // 3. Kiểm tra Ga đi và Ga đến không trùng nhau
-        if (comboBox_GaDi.getSelectedItem().equals(comboBox_GaDen.getSelectedItem())) {
-            JOptionPane.showMessageDialog(this, 
-                "Ga đi và ga đến không được trùng nhau!\nVui lòng chọn lại.", 
-                "Lỗi - Dữ liệu không hợp lệ", 
-                JOptionPane.ERROR_MESSAGE);
-            comboBox_GaDen.requestFocus();
-            return false;
-        }
-        
-        // 4. Kiểm tra Ngày đi
-        if (dateChooser_NgayDi.getDate() == null) {
-            JOptionPane.showMessageDialog(this, 
-                "Vui lòng chọn ngày đi!", 
-                "Lỗi - Thiếu thông tin", 
-                JOptionPane.WARNING_MESSAGE);
-            dateChooser_NgayDi.requestFocus();
-            return false;
-        }
-        
-        // 5. Kiểm tra Ngày đến
-        if (dateChooser_NgayDen.getDate() == null) {
-            JOptionPane.showMessageDialog(this, 
-                "Vui lòng chọn ngày đến!", 
-                "Lỗi - Thiếu thông tin", 
-                JOptionPane.WARNING_MESSAGE);
-            dateChooser_NgayDen.requestFocus();
-            return false;
-        }
-        
-        // 6. Kiểm tra Giờ đi không được để trống
-        if (textField_GioDi.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "Vui lòng nhập giờ đi!\n(Định dạng: HH:mm:ss)\nVí dụ: 08:30:00", 
-                "Lỗi - Thiếu thông tin", 
-                JOptionPane.WARNING_MESSAGE);
-            textField_GioDi.requestFocus();
-            return false;
-        }
-        
-        // 7. Kiểm tra Giờ đến không được để trống
-        if (textField_GioDen.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "Vui lòng nhập giờ đến!\n(Định dạng: HH:mm:ss)\nVí dụ: 18:45:00", 
-                "Lỗi - Thiếu thông tin", 
-                JOptionPane.WARNING_MESSAGE);
-            textField_GioDen.requestFocus();
-            return false;
-        }
-        
-        // 8. Kiểm tra định dạng Giờ đi
-        LocalTime gioDi = null;
-        try {
-            gioDi = LocalTime.parse(textField_GioDi.getText().trim());
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, 
-                "Giờ đi không đúng định dạng!\n" +
-                "Định dạng yêu cầu: HH:mm:ss (24 giờ)\n" +
-                "Ví dụ: 08:30:00 hoặc 14:15:30\n\n" +
-                "Lỗi: " + e.getMessage(), 
-                "Lỗi - Định dạng không hợp lệ", 
-                JOptionPane.ERROR_MESSAGE);
-            textField_GioDi.requestFocus();
-            textField_GioDi.selectAll();
-            return false;
-        }
-        
-        // 9. Kiểm tra định dạng Giờ đến
-        LocalTime gioDen = null;
-        try {
-            gioDen = LocalTime.parse(textField_GioDen.getText().trim());
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, 
-                "Giờ đến không đúng định dạng!\n" +
-                "Định dạng yêu cầu: HH:mm:ss (24 giờ)\n" +
-                "Ví dụ: 18:45:00 hoặc 23:59:00\n\n" +
-                "Lỗi: " + e.getMessage(), 
-                "Lỗi - Định dạng không hợp lệ", 
-                JOptionPane.ERROR_MESSAGE);
-            textField_GioDen.requestFocus();
-            textField_GioDen.selectAll();
-            return false;
-        }
-        
-        // 10. Kiểm tra logic thời gian (Ngày đến phải sau hoặc bằng Ngày đi)
-        LocalDate ngayDi = dateChooser_NgayDi.getDate().toInstant()
-            .atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate ngayDen = dateChooser_NgayDen.getDate().toInstant()
-            .atZone(ZoneId.systemDefault()).toLocalDate();
-        
-        if (ngayDen.isBefore(ngayDi)) {
-            JOptionPane.showMessageDialog(this, 
-                "Ngày đến phải sau hoặc bằng ngày đi!\n\n" +
-                "Ngày đi: " + ngayDi.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
-                "Ngày đến: " + ngayDen.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), 
-                "Lỗi - Thời gian không hợp lệ", 
-                JOptionPane.ERROR_MESSAGE);
-            dateChooser_NgayDen.requestFocus();
-            return false;
-        }
-        
-        // 11. Nếu cùng ngày, kiểm tra giờ đến phải sau giờ đi
-        if (ngayDi.equals(ngayDen)) {
-            if (gioDen.isBefore(gioDi) || gioDen.equals(gioDi)) {
-                JOptionPane.showMessageDialog(this, 
-                    "Giờ đến phải sau giờ đi!\n\n" +
-                    "Giờ đi: " + gioDi.toString() + "\n" +
-                    "Giờ đến: " + gioDen.toString() + "\n\n" +
-                    "(Vì cùng ngày: " + ngayDi.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ")", 
-                    "Lỗi - Thời gian không hợp lệ", 
-                    JOptionPane.ERROR_MESSAGE);
-                textField_GioDen.requestFocus();
-                textField_GioDen.selectAll();
-                return false;
-            }
-        }
-        
-        // 12. Kiểm tra ngày đi không được là ngày quá khứ (chỉ cho nút THÊM)
-        LocalDate today = LocalDate.now();
-        if (textField_MaTau.getText().trim().isEmpty()) { // Chỉ kiểm tra khi THÊM mới
-            if (ngayDi.isBefore(today)) {
-                int confirm = JOptionPane.showConfirmDialog(this, 
-                    "Ngày đi đã là ngày trong quá khứ!\n\n" +
-                    "Ngày đi: " + ngayDi.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
-                    "Hôm nay: " + today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n\n" +
-                    "Bạn có chắc muốn tiếp tục?", 
-                    "Cảnh báo - Ngày quá khứ", 
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE);
-                
-                if (confirm == JOptionPane.NO_OPTION) {
-                    dateChooser_NgayDi.requestFocus();
-                    return false;
-                }
-            }
-        }
-        
-        return true;
-    }
-
-    // Cập nhật lại actionPerformed với validation bổ sung
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         
-        // ==================== NÚT THÊM ====================
+        // NÚT THÊM - Tự động tạo toa và ghế
         if (o.equals(btnThem)) {
-            if (!validData()) {
-                return; // Dừng nếu validation thất bại
-            }
-            
-            ChuyenTau ct = revertChuyenTau();
-            if (ct != null) {
-                ChuyenTau existingCT = dsct.getChuyenTauTheoMaTau(ct.getMaTau());
-                if (existingCT != null) {
-                    JOptionPane.showMessageDialog(this, 
-                        "Chuyến tàu đã tồn tại trong cơ sở dữ liệu!\n\nMã tàu: " + ct.getMaTau(), 
-                        "Lỗi - Trùng lặp", 
-                        JOptionPane.ERROR_MESSAGE);
-                } else {
-                    try {
-                        // Thêm chuyến tàu
-                        dsct.create(ct);
-                        
-                        // Tự động tạo toa và ghế cho chuyến tàu
-                        String maTau = ct.getMaTau();
-                        
-                        // Tạo 2 toa giường nằm (32 ghế mỗi toa)
-                        for (int i = 1; i <= 2; i++) {
-                            String maToa = maTau + "_0" + i;
-                            if (dsct.themToa(maToa, "Giường nằm", maTau)) {
-                                dsct.themGheChoToa(maToa, 32);
-                            }
-                        }
-                        
-                        // Tạo 2 toa ghế mềm (64 ghế mỗi toa)
-                        for (int i = 3; i <= 4; i++) {
-                            String maToa = maTau + "_0" + i;
-                            if (dsct.themToa(maToa, "Ghế mềm", maTau)) {
-                                dsct.themGheChoToa(maToa, 64);
-                            }
-                        }
-                        
-                        // Tạo 1 toa VIP (20 ghế)
-                        String maToaVIP = maTau + "_05";
-                        if (dsct.themToa(maToaVIP, "VIP", maTau)) {
-                            dsct.themGheChoToa(maToaVIP, 20);
-                        }
-                        
-                        model.setRowCount(0);
-                        datatoTable();
-                        deleteField();
-                        
-                        JOptionPane.showMessageDialog(this, 
-                            "Thêm chuyến tàu thành công!\n\n" +
-                            "Mã tàu: " + maTau + "\n" +
-                            "Đã tạo 5 toa:\n" +
-                            "- 2 toa Giường nằm (32 ghế/toa)\n" +
-                            "- 2 toa Ghế mềm (64 ghế/toa)\n" +
-                            "- 1 toa VIP (20 ghế)", 
-                            "Thành công", 
-                            JOptionPane.INFORMATION_MESSAGE);
+            if (validData()) {
+                ChuyenTau ct = revertChuyenTau();
+                if (ct != null) {
+                    ChuyenTau existingCT = dsct.getChuyenTauTheoMaTau(ct.getMaTau());
+                    if (existingCT != null) {
+                        JOptionPane.showMessageDialog(this, "Chuyến tàu đã tồn tại trong cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        try {
+                            // Thêm chuyến tàu
+                            dsct.create(ct);
                             
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                        JOptionPane.showMessageDialog(this, 
-                            "Lỗi khi thêm chuyến tàu!\n\nChi tiết: " + e1.getMessage(), 
-                            "Lỗi", 
-                            JOptionPane.ERROR_MESSAGE);
+                            // Tự động tạo toa và ghế cho chuyến tàu
+                            String maTau = ct.getMaTau();
+                            
+                            // Tạo 2 toa giường nằm (32 ghế mỗi toa)
+                            for (int i = 1; i <= 2; i++) {
+                                String maToa = maTau + "_0" + i;
+                                if (dsct.themToa(maToa, "Giường nằm", maTau)) {
+                                    dsct.themGheChoToa(maToa, 32);
+                                }
+                            }
+                            
+                            // Tạo 2 toa ghế mềm (64 ghế mỗi toa)
+                            for (int i = 3; i <= 4; i++) {
+                                String maToa = maTau + "_0" + i;
+                                if (dsct.themToa(maToa, "Ghế mềm", maTau)) {
+                                    dsct.themGheChoToa(maToa, 64);
+                                }
+                            }
+                            
+                            // Tạo 1 toa VIP (20 ghế)
+                            String maToaVIP = maTau + "_05";
+                            if (dsct.themToa(maToaVIP, "VIP", maTau)) {
+                                dsct.themGheChoToa(maToaVIP, 20);
+                            }
+                            
+                            model.setRowCount(0);
+                            datatoTable();
+                            JOptionPane.showMessageDialog(this, "Thêm chuyến tàu thành công!\nĐã tạo 5 toa: 2 Giường nằm, 2 Ghế mềm, 1 VIP");
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                            JOptionPane.showMessageDialog(this, "Lỗi khi thêm chuyến tàu: " + e1.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
+                deleteField();
             }
         }
         
-        // ==================== NÚT TÌM ====================
+        // NÚT TÌM - Lọc dữ liệu và cập nhật comboBox
         if (o.equals(btnTim)) {
-            // Kiểm tra ít nhất 1 tiêu chí
-            boolean hasSearchCriteria = false;
-            
-            if (comboBox_GaDi.getSelectedIndex() > -1) {
-                hasSearchCriteria = true;
-            }
-            if (comboBox_GaDen.getSelectedIndex() > -1) {
-                hasSearchCriteria = true;
-            }
-            if (dateChooser_NgayDi.getDate() != null) {
-                hasSearchCriteria = true;
-            }
-            if (dateChooser_NgayDen.getDate() != null) {
-                hasSearchCriteria = true;
-            }
-            
-            if (!hasSearchCriteria) {
-                JOptionPane.showMessageDialog(this, 
-                    "Vui lòng chọn ít nhất một tiêu chí tìm kiếm:\n" +
-                    "- Ga đi\n" +
-                    "- Ga đến\n" +
-                    "- Ngày đi\n" +
-                    "- Ngày đến", 
-                    "Thông báo - Tìm kiếm", 
-                    JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-            
-            // Kiểm tra logic ngày nếu cả 2 đều được chọn
-            if (dateChooser_NgayDi.getDate() != null && dateChooser_NgayDen.getDate() != null) {
-                LocalDate ngayDi = dateChooser_NgayDi.getDate().toInstant()
-                    .atZone(ZoneId.systemDefault()).toLocalDate();
-                LocalDate ngayDen = dateChooser_NgayDen.getDate().toInstant()
-                    .atZone(ZoneId.systemDefault()).toLocalDate();
-                
-                if (ngayDen.isBefore(ngayDi)) {
-                    JOptionPane.showMessageDialog(this, 
-                        "Ngày đến phải sau hoặc bằng ngày đi!\n\n" +
-                        "Ngày đi: " + ngayDi.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
-                        "Ngày đến: " + ngayDen.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), 
-                        "Lỗi - Tiêu chí tìm kiếm", 
-                        JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-            
-            // Lọc dữ liệu
+            // Lọc dữ liệu theo điều kiện
             filterRows();
+            
+            // Cập nhật lại comboBox_TimTheoMaTau với kết quả lọc
             updateComboBoxTimTheoMaTau();
             
-            int rowCount = table_CT.getRowCount();
-            JOptionPane.showMessageDialog(this, 
-                "Tìm kiếm hoàn tất!\n\nTìm thấy: " + rowCount + " chuyến tàu", 
-                "Kết quả tìm kiếm", 
-                JOptionPane.INFORMATION_MESSAGE);
+            // KHÔNG gọi deleteField() để giữ lại điều kiện tìm kiếm
         }
         
-        // ==================== NÚT SỬA ====================
+        // NÚT SỬA - Cập nhật thông tin chuyến tàu
         if (o.equals(btnSua)) {
-            // Kiểm tra đã chọn dòng
-            int row = table_CT.getSelectedRow();
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, 
-                    "Vui lòng chọn chuyến tàu cần sửa từ bảng!", 
-                    "Lỗi - Chưa chọn dòng", 
-                    JOptionPane.WARNING_MESSAGE);
-                return;
+            if (validData()) {
+                update();
             }
-            
-            // Kiểm tra mã tàu
-            if (textField_MaTau.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, 
-                    "Không tìm thấy mã tàu!\nVui lòng chọn lại chuyến tàu từ bảng.", 
-                    "Lỗi - Thiếu thông tin", 
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            // Validation đầy đủ
-            if (!validData()) {
-                return;
-            }
-            
-            // Cập nhật
-            update();
         }
         
-        // ==================== NÚT XÓA ====================
+        // NÚT XÓA - Xóa cascade Ghế -> Toa -> ChuyenTau
         if (o.equals(btnXoa)) {
             int row = table_CT.getSelectedRow();
             if (row == -1) {
-                JOptionPane.showMessageDialog(this, 
-                    "Vui lòng chọn chuyến tàu cần xóa từ bảng!", 
-                    "Lỗi - Chưa chọn dòng", 
-                    JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Chọn chuyến tàu muốn xóa!");
                 return;
             }
             
-            String maTau = table_CT.getValueAt(row, 1).toString();
-            
-            int confirmResult = JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc chắn muốn xóa chuyến tàu này không?\n\n" +
-                "Mã tàu: " + maTau + "\n\n" +
-                "LƯU Ý: Tất cả toa và ghế liên quan cũng sẽ bị xóa!\n" +
-                "Hành động này không thể hoàn tác!", 
-                "Xác nhận xóa", 
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
+            int confirmResult = JOptionPane.showConfirmDialog(
+                    this,
+                    "Bạn có chắc muốn xóa chuyến tàu này?\n(Tất cả toa và ghế liên quan cũng sẽ bị xóa)",
+                    "Xác nhận",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
             
             if (confirmResult == JOptionPane.NO_OPTION) {
                 return;
             }
             
+            String maTau = table_CT.getValueAt(row, 1).toString();
             try {
+                // Xóa chuyến tàu (CASCADE sẽ xóa ghế -> toa -> chuyến tàu)
                 boolean success = dsct.delete(maTau);
                 
                 if (success) {
                     model.setRowCount(0);
                     datatoTable();
+                    JOptionPane.showMessageDialog(this, "Xóa chuyến tàu thành công!\n(Đã xóa tất cả toa và ghế liên quan)");
                     deleteField();
-                    
-                    JOptionPane.showMessageDialog(this, 
-                        "Xóa chuyến tàu thành công!\n\n" +
-                        "Mã tàu: " + maTau + "\n" +
-                        "(Đã xóa tất cả toa và ghế liên quan)", 
-                        "Thành công", 
-                        JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this, 
-                        "Không thể xóa chuyến tàu!\n\n" +
-                        "Nguyên nhân có thể:\n" +
-                        "- Đã có vé được đặt cho chuyến tàu này\n" +
-                        "- Chuyến tàu đang được sử dụng\n\n" +
-                        "Vui lòng kiểm tra lại!", 
-                        "Lỗi - Không thể xóa", 
+                        "Không thể xóa chuyến tàu!\nCó thể đã có vé được đặt cho chuyến tàu này.", 
+                        "Lỗi", 
                         JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, 
-                    "Lỗi khi xóa chuyến tàu!\n\n" +
-                    "Chi tiết: " + ex.getMessage() + "\n\n" +
-                    "Không thể xóa nếu đã có vé được đặt!", 
-                    "Lỗi - Xóa thất bại", 
+                    "Lỗi khi xóa chuyến tàu: " + ex.getMessage() + 
+                    "\n\nKhông thể xóa nếu đã có vé được đặt!", 
+                    "Lỗi", 
                     JOptionPane.ERROR_MESSAGE);
             }
         }
-        
-        // ==================== NÚT LÀM MỚI ====================
-        if (o.equals(btnLamMoi)) {
-            sorter.setRowFilter(null);
-            model.setRowCount(0);
-            datatoTable();
-            deleteField();
-            
-            JOptionPane.showMessageDialog(this,
-                "Làm mới thành công\n","", JOptionPane.INFORMATION_MESSAGE);
-        }
     }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -783,6 +495,48 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
     @Override
     public void mouseExited(MouseEvent e) {}
 
+    // Validation
+    public boolean validData() {
+        if (comboBox_GaDi.getSelectedItem() == null || comboBox_GaDi.getSelectedItem().toString().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ga đi");
+            return false;
+        }
+        if (comboBox_GaDen.getSelectedItem() == null || comboBox_GaDen.getSelectedItem().toString().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ga đến");
+            return false;
+        }
+        if (comboBox_GaDi.getSelectedItem().equals(comboBox_GaDen.getSelectedItem())) {
+            JOptionPane.showMessageDialog(this, "Ga đi và ga đến không được trùng nhau");
+            return false;
+        }
+        if (dateChooser_NgayDi.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày đi");
+            return false;
+        }
+        if (dateChooser_NgayDen.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày đến");
+            return false;
+        }
+        if (textField_GioDi.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập giờ đi (định dạng HH:mm:ss)");
+            return false;
+        }
+        if (textField_GioDen.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập giờ đến (định dạng HH:mm:ss)");
+            return false;
+        }
+        
+        // Kiểm tra định dạng giờ
+        try {
+            LocalTime.parse(textField_GioDi.getText().trim());
+            LocalTime.parse(textField_GioDen.getText().trim());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Giờ không đúng định dạng (HH:mm:ss)");
+            return false;
+        }
+        
+        return true;
+    }
 
     // Tạo ChuyenTau từ form
     public ChuyenTau revertChuyenTau() {
@@ -791,10 +545,8 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
         String maGaDen = comboBox_GaDen.getSelectedItem().toString();
         
         // Lấy đối tượng Ga từ mã ga
-        Ga gaDi = gaDAO.getGaTheoTenGa(maGaDi);
-        Ga gaDen = gaDAO.getGaTheoTenGa(maGaDen);
-        
-        
+        Ga gaDi = gaDAO.getGaTheoMaGa(maGaDi);
+        Ga gaDen = gaDAO.getGaTheoMaGa(maGaDen);
         
         if (gaDi == null || gaDen == null) {
             JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin ga", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -829,8 +581,8 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
             String maGaDen = comboBox_GaDen.getSelectedItem().toString();
             
             // Lấy đối tượng Ga từ mã ga
-            Ga gaDi = gaDAO.getGaTheoTenGa(maGaDi);
-            Ga gaDen = gaDAO.getGaTheoTenGa(maGaDen);
+            Ga gaDi = gaDAO.getGaTheoMaGa(maGaDi);
+            Ga gaDen = gaDAO.getGaTheoMaGa(maGaDen);
             
             if (gaDi == null || gaDen == null) {
                 JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin ga", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -895,14 +647,12 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         
         for (ChuyenTau ct : list) {
-        	Ga gaDi = ga.getGaTheoMaGa(ct.getGaDi().getMaGa());
-        	Ga gaDen = ga.getGaTheoMaGa(ct.getGaDen().getMaGa());
             comboBox_TimTheoMaTau.addItem(ct.getMaTau());
             model.addRow(new Object[] {
                 stt++,
                 ct.getMaTau(),
-                gaDi.getTenGa(),  // Lấy mã ga từ đối tượng Ga
-                gaDen.getTenGa(), // Lấy mã ga từ đối tượng Ga
+                ct.getGaDi().getMaGa(),  // Lấy mã ga từ đối tượng Ga
+                ct.getGaDen().getMaGa(), // Lấy mã ga từ đối tượng Ga
                 ct.getNgayDi().format(dateFormatter),
                 ct.getGioDi().toString(),
                 ct.getNgayDen().format(dateFormatter),
@@ -915,8 +665,8 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
     public void loadGa() {
         ArrayList<Ga> listGa = gaDAO.docTuBang();
         for (Ga ga : listGa) {
-            comboBox_GaDi.addItem(ga.getTenGa());
-            comboBox_GaDen.addItem(ga.getTenGa());
+            comboBox_GaDi.addItem(ga.getMaGa());
+            comboBox_GaDen.addItem(ga.getMaGa());
         }
     }
 
@@ -981,6 +731,7 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
             String maTau = table_CT.getValueAt(i, 1).toString();
             comboBox_TimTheoMaTau.addItem(maTau);
         }
+        deleteField();
     }
 
     // Hiển thị thông tin chuyến tàu
