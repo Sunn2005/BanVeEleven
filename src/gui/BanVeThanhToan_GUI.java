@@ -456,7 +456,7 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 				    // Tăng số thứ tự vé cho lần tạo tiếp theo
 				    currentVeNumber++;
 				    
-				    JOptionPane.showMessageDialog(null,"Đặt vé thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE, 
+				    JOptionPane.showMessageDialog(null,"Đặt vé thành công!\nLập hóa đơn thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE, 
 			                new ImageIcon(getClass().getResource("/img/299110_check_sign_icon.png")));
 				    
 				    QuanLyVe_Gui quanLyVe_gui = new QuanLyVe_Gui(trangChu);
@@ -916,7 +916,7 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 				    currentVeNumber++;
 				}
 				
-				JOptionPane.showMessageDialog(null,"Đã đổi vé thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE, 
+				JOptionPane.showMessageDialog(null,"Đã đổi vé thành công!\nLập hóa đơn mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE, 
 		                new ImageIcon(getClass().getResource("/img/299110_check_sign_icon.png")));
 				
 			    QuanLyVe_Gui quanLyVe_gui = new QuanLyVe_Gui(trangChu);

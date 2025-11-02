@@ -80,6 +80,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	private JMenu thongKe;
 	private JMenuItem thongKeDT;
 	private JMenuItem thongKeTheoCa;
+	private JMenuItem thongKeVe;
 	private JMenuItem thongKeCT;
 	private JMenu nhanVien;
 	private JMenu taiKhoan;
@@ -331,11 +332,15 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 		thongKeTheoCa = new JMenuItem("Thống kê doanh thu theo ca");
 		thongKe.add(thongKeTheoCa);
 		
-		thongKeDT = new JMenuItem("Thống kê doanh thu");
+		thongKeDT = new JMenuItem("Thống kê doanh thu(theo thời gian)");
 		thongKe.add(thongKeDT);
+		thongKeVe = new JMenuItem("Thống Kê Vé");
+        thongKe.add(thongKeVe);
 		
 		thongKeCT = new JMenuItem("Thống Kê Chuyến Tàu");
 		thongKe.add(thongKeCT);
+
+		
 		
 		nhanVien = new JMenu("Nhân Viên");
 		nhanVien.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -808,6 +813,34 @@ public class TrangChu_GUI extends JFrame implements ActionListener,MouseListener
 	    		}
 	    	}
 	    });
+
+		// ... (Ngay sau khối thongKeTheoCa.addActionListener{...} )
+
+        thongKeVe.addActionListener(new ActionListener() { // <-- THÊM CẢ KHỐI NÀY
+            private TaiKhoan tk;
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tk = dangNhap.taiKhoanLogined;
+                
+                // Giống như Thống kê Doanh thu, chỉ cho phép quản lý (phân quyền 1)
+                if (tk.getPhanQuyen() == 1) { 
+                    ThongKe_GUI jptkVe = new ThongKe_GUI(TrangChu_GUI.this);
+                    
+                    // Bạn sẽ cần tạo phương thức này bên trong lớp ThongKe_GUI
+                    jptkVe.hienThiThongKeVe(); 
+                    
+                    content.removeAll();
+                    content.add(jptkVe);
+                    content.revalidate();
+                    content.repaint();
+                } else {
+                    JOptionPane.showMessageDialog(TrangChu_GUI.this, "Tài khoản của bạn không có quyền truy cập");
+                }
+            }
+        });
+
+// ... (Tiếp tục với khachHang.addMenuListener{...})
 	    khachHang.addMenuListener(new MenuListener() {
 
 			@Override
