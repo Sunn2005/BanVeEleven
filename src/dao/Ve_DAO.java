@@ -87,8 +87,8 @@ public class Ve_DAO {
 			stmt.setString(5, ve.getKhachHang().getMaKH());
 			stmt.setDate(6, java.sql.Date.valueOf(ve.getNgayDi()));
 			stmt.setTime(7, java.sql.Time.valueOf(ve.getGioDi()));
-			stmt.setDate(8, java.sql.Date.valueOf(ve.getNgayDen()));
-			stmt.setTime(9, java.sql.Time.valueOf(ve.getGioDen()));
+			stmt.setDate(8, java.sql.Date.valueOf(ve.getNgayDi()));
+			stmt.setTime(9, java.sql.Time.valueOf(ve.getGioDi()));
 			stmt.setString(10, ve.getGaDi().getMaGa());
 			stmt.setString(11, ve.getGaDen().getMaGa());
 			stmt.setString(12, ve.getHang());
@@ -119,8 +119,8 @@ public class Ve_DAO {
 			stmt.setString(4, ve.getKhachHang().getMaKH());
 			stmt.setDate(5, java.sql.Date.valueOf(ve.getNgayDi()));
 			stmt.setTime(6, java.sql.Time.valueOf(ve.getGioDi()));
-			stmt.setDate(7, java.sql.Date.valueOf(ve.getNgayDen()));
-			stmt.setTime(8, java.sql.Time.valueOf(ve.getGioDen()));
+			stmt.setDate(7, java.sql.Date.valueOf(ve.getNgayDi()));
+			stmt.setTime(8, java.sql.Time.valueOf(ve.getGioDi()));
 			stmt.setString(9, ve.getGaDi().getMaGa());
 			stmt.setString(10, ve.getGaDen().getMaGa());
 			stmt.setString(11, ve.getHang());
