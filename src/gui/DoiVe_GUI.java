@@ -97,7 +97,6 @@ public class DoiVe_GUI extends JPanel {
 	private JPanel jp_VeMuaCu;
 	private Ve_JPanel pVeCu;
 	public Ve veCu;
-	
 	private JPanel panel_ChuThich;
 	private JButton btnTim, btnMua;
 	/**
