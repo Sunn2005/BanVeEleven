@@ -337,6 +337,169 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
         datatoTable();
     }
 
+ // Validation đầy đủ
+    public boolean validData() {
+        // 1. Kiểm tra Ga đi
+        if (comboBox_GaDi.getSelectedItem() == null || comboBox_GaDi.getSelectedItem().toString().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Vui lòng chọn ga đi!", 
+                "Lỗi - Thiếu thông tin", 
+                JOptionPane.WARNING_MESSAGE);
+            comboBox_GaDi.requestFocus();
+            return false;
+        }
+        
+        // 2. Kiểm tra Ga đến
+        if (comboBox_GaDen.getSelectedItem() == null || comboBox_GaDen.getSelectedItem().toString().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Vui lòng chọn ga đến!", 
+                "Lỗi - Thiếu thông tin", 
+                JOptionPane.WARNING_MESSAGE);
+            comboBox_GaDen.requestFocus();
+            return false;
+        }
+        
+        // 3. Kiểm tra Ga đi và Ga đến không trùng nhau
+        if (comboBox_GaDi.getSelectedItem().equals(comboBox_GaDen.getSelectedItem())) {
+            JOptionPane.showMessageDialog(this, 
+                "Ga đi và ga đến không được trùng nhau!\nVui lòng chọn lại.", 
+                "Lỗi - Dữ liệu không hợp lệ", 
+                JOptionPane.ERROR_MESSAGE);
+            comboBox_GaDen.requestFocus();
+            return false;
+        }
+        
+        // 4. Kiểm tra Ngày đi
+        if (dateChooser_NgayDi.getDate() == null) {
+            JOptionPane.showMessageDialog(this, 
+                "Vui lòng chọn ngày đi!", 
+                "Lỗi - Thiếu thông tin", 
+                JOptionPane.WARNING_MESSAGE);
+            dateChooser_NgayDi.requestFocus();
+            return false;
+        }
+        
+        // 5. Kiểm tra Ngày đến
+        if (dateChooser_NgayDen.getDate() == null) {
+            JOptionPane.showMessageDialog(this, 
+                "Vui lòng chọn ngày đến!", 
+                "Lỗi-Thiếu thông tin", 
+                JOptionPane.WARNING_MESSAGE);
+            dateChooser_NgayDen.requestFocus();
+            return false;
+        }
+        
+        // 6. Kiểm tra Giờ đi không được để trống
+        if (textField_GioDi.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Vui lòng nhập giờ đi!\n(Định dạng: HH:mm:ss)\nVí dụ: 08:30:00", 
+                "Lỗi - Thiếu thông tin", 
+                JOptionPane.WARNING_MESSAGE);
+            textField_GioDi.requestFocus();
+            return false;
+        }
+        
+        // 7. Kiểm tra Giờ đến không được để trống
+        if (textField_GioDen.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Vui lòng nhập giờ đến!\n(Định dạng: HH:mm:ss)\nVí dụ: 18:45:00", 
+                "Lỗi - Thiếu thông tin", 
+                JOptionPane.WARNING_MESSAGE);
+            textField_GioDen.requestFocus();
+            return false;
+        }
+        
+        // 8. Kiểm tra định dạng Giờ đi
+        LocalTime gioDi = null;
+        try {
+            gioDi = LocalTime.parse(textField_GioDi.getText().trim());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Giờ đi không đúng định dạng!\n" +
+                "Định dạng yêu cầu: HH:mm:ss (24 giờ)\n" +
+                "Ví dụ: 08:30:00 hoặc 14:15:30\n\n" +
+                "Lỗi: " + e.getMessage(), 
+                "Lỗi - Định dạng không hợp lệ", 
+                JOptionPane.ERROR_MESSAGE);
+            textField_GioDi.requestFocus();
+            textField_GioDi.selectAll();
+            return false;
+        }
+        
+        // 9. Kiểm tra định dạng Giờ đến
+        LocalTime gioDen = null;
+        try {
+            gioDen = LocalTime.parse(textField_GioDen.getText().trim());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Giờ đến không đúng định dạng!\n" +
+                "Định dạng yêu cầu: HH:mm:ss (24 giờ)\n" +
+                "Ví dụ: 18:45:00 hoặc 23:59:00\n\n" +
+                "Lỗi: " + e.getMessage(), 
+                "Lỗi - Định dạng không hợp lệ", 
+                JOptionPane.ERROR_MESSAGE);
+            textField_GioDen.requestFocus();
+            textField_GioDen.selectAll();
+            return false;
+        }
+        
+        // 10. Kiểm tra logic thời gian (Ngày đến phải sau hoặc bằng Ngày đi)
+        LocalDate ngayDi = dateChooser_NgayDi.getDate().toInstant()
+            .atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate ngayDen = dateChooser_NgayDen.getDate().toInstant()
+            .atZone(ZoneId.systemDefault()).toLocalDate();
+        
+        if (ngayDen.isBefore(ngayDi)) {
+            JOptionPane.showMessageDialog(this, 
+                "Ngày đến phải sau hoặc bằng ngày đi!\n\n" +
+                "Ngày đi: " + ngayDi.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
+                "Ngày đến: " + ngayDen.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), 
+                "Lỗi - Thời gian không hợp lệ", 
+                JOptionPane.ERROR_MESSAGE);
+            dateChooser_NgayDen.requestFocus();
+            return false;
+        }
+        
+        // 11. Nếu cùng ngày, kiểm tra giờ đến phải sau giờ đi
+        if (ngayDi.equals(ngayDen)) {
+            if (gioDen.isBefore(gioDi) || gioDen.equals(gioDi)) {
+                JOptionPane.showMessageDialog(this, 
+                    "Giờ đến phải sau giờ đi!\n\n" +
+                    "Giờ đi: " + gioDi.toString() + "\n" +
+                    "Giờ đến: " + gioDen.toString() + "\n\n" +
+                    "(Vì cùng ngày: " + ngayDi.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ")", 
+                    "Lỗi - Thời gian không hợp lệ", 
+                    JOptionPane.ERROR_MESSAGE);
+                textField_GioDen.requestFocus();
+                textField_GioDen.selectAll();
+                return false;
+            }
+        }
+        
+        // 12. Kiểm tra ngày đi không được là ngày quá khứ (chỉ cho nút THÊM)
+        LocalDate today = LocalDate.now();
+        if (textField_MaTau.getText().trim().isEmpty()) { // Chỉ kiểm tra khi THÊM mới
+            if (ngayDi.isBefore(today)) {
+                int confirm = JOptionPane.showConfirmDialog(this, 
+                    "Ngày đi đã là ngày trong quá khứ!\n\n" +
+                    "Ngày đi: " + ngayDi.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
+                    "Hôm nay: " + today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n\n" +
+                    "Bạn có chắc muốn tiếp tục?", 
+                    "Cảnh báo - Ngày quá khứ", 
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+                
+                if (confirm == JOptionPane.NO_OPTION) {
+                    dateChooser_NgayDi.requestFocus();
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+
+    // Cập nhật lại actionPerformed với validation bổ sung
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
