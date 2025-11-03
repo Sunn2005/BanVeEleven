@@ -394,7 +394,7 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
         if (dateChooser_NgayDen.getDate() == null) {
             JOptionPane.showMessageDialog(this, 
                 "Vui lòng chọn ngày đến!", 
-                "Lỗi - Thiếu thông tin", 
+                "Lỗi-Thiếu thông tin", 
                 JOptionPane.WARNING_MESSAGE);
             dateChooser_NgayDen.requestFocus();
             return false;
