@@ -382,7 +382,7 @@ public class Ve {
 			PdfFont fontItalic = PdfFontFactory.createFont(fontPathItalic, PdfEncodings.IDENTITY_H, true);
 
 			// Thêm hình ảnh vào đầu tài liệu
-			String imagePath = getClass().getResource("/img/Logo_eleven.png").getPath(); // Đường dẫn đến hình ảnh
+			String imagePath = getClass().getResource("/img/Logo_eleven_trang.png").getPath(); // Đường dẫn đến hình ảnh
 			Image img = new Image(ImageDataFactory.create(imagePath));
 			img.setWidth(120); // Đặt chiều rộng cho hình ảnh
 

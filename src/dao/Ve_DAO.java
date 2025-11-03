@@ -87,8 +87,8 @@ public class Ve_DAO {
 			stmt.setString(5, ve.getKhachHang().getMaKH());
 			stmt.setDate(6, java.sql.Date.valueOf(ve.getNgayDi()));
 			stmt.setTime(7, java.sql.Time.valueOf(ve.getGioDi()));
-			stmt.setDate(8, java.sql.Date.valueOf(ve.getNgayDen()));
-			stmt.setTime(9, java.sql.Time.valueOf(ve.getGioDen()));
+			stmt.setDate(8, java.sql.Date.valueOf(ve.getNgayDi()));
+			stmt.setTime(9, java.sql.Time.valueOf(ve.getGioDi()));
 			stmt.setString(10, ve.getGaDi().getMaGa());
 			stmt.setString(11, ve.getGaDen().getMaGa());
 			stmt.setString(12, ve.getHang());
@@ -119,8 +119,8 @@ public class Ve_DAO {
 			stmt.setString(4, ve.getKhachHang().getMaKH());
 			stmt.setDate(5, java.sql.Date.valueOf(ve.getNgayDi()));
 			stmt.setTime(6, java.sql.Time.valueOf(ve.getGioDi()));
-			stmt.setDate(7, java.sql.Date.valueOf(ve.getNgayDen()));
-			stmt.setTime(8, java.sql.Time.valueOf(ve.getGioDen()));
+			stmt.setDate(7, java.sql.Date.valueOf(ve.getNgayDi()));
+			stmt.setTime(8, java.sql.Time.valueOf(ve.getGioDi()));
 			stmt.setString(9, ve.getGaDi().getMaGa());
 			stmt.setString(10, ve.getGaDen().getMaGa());
 			stmt.setString(11, ve.getHang());
@@ -200,10 +200,11 @@ public class Ve_DAO {
 	// Phương thức lấy vé theo mã vé
 	public ArrayList<Ve> getDsVeTheoMaChiTiet(String maChiTiet) {
 		ArrayList<Ve> ds = new ArrayList<Ve>();
+        KhachHang_DAO dao= new KhachHang_DAO();
 		try {
 			ConnectDB.getInstance();
 			Connection con = ConnectDB.getConnection();
-			String sql = "SELECT * FROM Ve WHERE chiTiet = ?";
+			String sql = "SELECT * FROM Ve  WHERE chiTiet = ?";
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setString(1, maChiTiet);
 			ResultSet rs = stmt.executeQuery();
@@ -214,6 +215,8 @@ public class Ve_DAO {
 				String maToa = rs.getString("toa");
 				int soGhe = rs.getInt("soGhe");
 				String maKH = rs.getString("khachHang");
+                KhachHang kh = dao.getKhachHangTheoMaKH(maKH);
+
 				LocalDate ngayDi = rs.getDate("ngayDi").toLocalDate();
 				LocalTime gioDi = rs.getTime("gioDi").toLocalTime();
 				LocalDate ngayDen = rs.getDate("ngayDen").toLocalDate();
@@ -228,13 +231,12 @@ public class Ve_DAO {
 				ChuyenTau tau = new ChuyenTau(maTau);
 				Toa toa = new Toa(maToa);
 				Ghe ghe = new Ghe(soGhe, toa);
-				KhachHang khachHang = new KhachHang(maKH);
 				Ga gaDi = dsGa.getGaTheoMaGa(maGaDi);
 				Ga gaDen = dsGa.getGaTheoMaGa(maGaDen);
 				ChiTietHoaDon chiTiet = new ChiTietHoaDon(maChiTiet);
 				
 				// Tạo đối tượng Ve
-				Ve ve = new Ve(maVe1, tau, toa, ghe, khachHang, ngayDi, gioDi,ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai,
+				Ve ve = new Ve(maVe1, tau, toa, ghe, kh, ngayDi, gioDi,ngayDen, gioDen, gaDi, gaDen, hang, khuyenMai, trangThai,
 						chiTiet);
 				ds.add(ve);
 			}
