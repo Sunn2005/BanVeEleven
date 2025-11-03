@@ -534,10 +534,10 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 				NhanVien nv = revertNV();
 				if (nv != null) {
 					// Kiểm tra xem nhân viên đã tồn tại hay chưa
-					NhanVien existingNV = dsnv.getNhanVienTheoMaNV(nv.getMaNV());
+					NhanVien existingNV = dsnv.getNhanVienTheoMaNV(nv.getCccd());
 					if (existingNV != null) {
 						JOptionPane.showMessageDialog(this, "Nhân viên đã tồn tại trong cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-					} else {
+					} else if(textField_MaNV.getText().isEmpty()){
 						try {
 							dsnv.create(nv);	
 							model.setRowCount(0);
@@ -746,11 +746,20 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 
 	//Hàm lấy dữ liệu từ JPane thông tin nhân viên
 	public NhanVien revertNV() {
+        NhanVien_DAO nhanVienDao = new NhanVien_DAO();
+        ArrayList<NhanVien> list = nhanVienDao.docTuBang();
+
 	    String maNV = generateMaNV();
 	    String hoTen = textField_HoTen.getText();
 	    boolean gioiTinh = cb_nam.isSelected() ? false : (cb_nu.isSelected() ? true : true); // Sử dụng trực tiếp giá trị của checkbox
 	    String ca = comboBox_Ca.getSelectedItem().toString();
 	    String cccd = textField_CCCD.getText();
+        for (NhanVien nhanVien : list) {
+            if (cccd.equals(nhanVien.getCccd())) {
+                JOptionPane.showMessageDialog(this, "CCCD đã tồn tại. Vui lòng kiểm tra lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+        }
 
 	    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    LocalDate ngaySinh = null;
@@ -778,6 +787,12 @@ public class QuanLyNhanVien_GUI extends JPanel implements ActionListener,MouseLi
 
 	    String email = textField_Email.getText();
 	    String sdt = textField_SDT.getText();
+        for (NhanVien nhanVien : list) {
+            if (sdt.equals(nhanVien.getSdt())) {
+                JOptionPane.showMessageDialog(this, "Số điện thoại đã tồn tại. Vui lòng kiểm tra lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+        }
 	    boolean trangThai = cb_dangLam.isSelected() ? true : (cb_nghiLam.isSelected() ? false : false);
 	    int chucVu = comboBox_ChucVu.getSelectedIndex() == 0 ? 1 : 2;
 

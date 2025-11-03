@@ -54,12 +54,27 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 	private JTextField txtTu;
 	private JTextField txtDen;
 	private JTable table_CTHD;
-	private JTable table_DSV;
 	private ChiTietHoaDon_DAO dsCTHD = new ChiTietHoaDon_DAO();
 	private HoaDon_DAO dsHD = new HoaDon_DAO();
 	private DefaultTableModel model_CTHD;
 	private Ve_DAO dsVe = new Ve_DAO();
-	private DefaultTableModel model_DSV;
+
+	// Các trường hiển thị thông tin chi tiết vé
+	private JTextField txtMaVe;
+	private JTextField txtHangVe;
+	private JTextField txtKhuyenMai;
+	private JTextField txtGiaVe;
+	private JTextField txtGaDi;
+	private JTextField txtGaDen;
+	private JTextField txtThoiGianDi;
+	private JTextField txtThoiGianDen;
+
+	// Thêm các trường mới cho thông tin khách hàng và chỗ ngồi
+	private JTextField txtTenKhachHang;
+	private JTextField txtSoDienThoai;
+	private JTextField txtToa;
+	private JTextField txtChoNgoi;
+
 	private JPanel panel;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -81,8 +96,6 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 	private JPanel panel_3_1_1;
 	private JComboBox<String> comboBoxSL;
 	private JScrollPane scrollPane_CTHD;
-	private JLabel lblDSVe;
-	private JScrollPane scrollPane_DSV;
 	private JButton btn_XuatHD;
 	private TableRowSorter<DefaultTableModel> sorter;
 	private JLabel goBackIconLabel;
@@ -293,37 +306,160 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 		table_CTHD.setModel(model_CTHD);
 		scrollPane_CTHD.setViewportView(table_CTHD);
 
+		// Panel hiển thị thông tin chi tiết vé
 		JPanel panel_5 = new JPanel();
 		panel_5.setBackground(new Color(51, 102, 153));
-		panel_5.setBounds(314, 350, 136, 29);
+		panel_5.setBounds(314, 350, 200, 29);
 		add(panel_5);
+		panel_5.setLayout(null);
 
-		lblDSVe = new JLabel("Danh sách vé");
-		panel_5.add(lblDSVe);
-		lblDSVe.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblDSVe.setForeground(new Color(255, 255, 255));
+		JLabel lblThongTinVe = new JLabel("Thông tin chi tiết vé");
+		lblThongTinVe.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblThongTinVe.setForeground(new Color(255, 255, 255));
+		lblThongTinVe.setBounds(10, 0, 180, 29);
+		panel_5.add(lblThongTinVe);
 
+		// Panel chứa thông tin chi tiết vé
 		JPanel panel_6 = new JPanel();
 		panel_6.setBounds(314, 389, 1147, 162);
 		add(panel_6);
 		panel_6.setLayout(null);
+		panel_6.setBackground(new Color(255, 255, 255));
 
-		scrollPane_DSV = new JScrollPane();
-		scrollPane_DSV.setBounds(0, 0, 1147, 162);
-		panel_6.add(scrollPane_DSV);
+		// Cột 1
+		JLabel lblMaVe = new JLabel("Mã vé:");
+		lblMaVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblMaVe.setBounds(20, 10, 100, 25);
+		panel_6.add(lblMaVe);
 
-		table_DSV = new JTable();
-		table_DSV.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		model_DSV = new DefaultTableModel(
-				new Object[][] {
-				},
-				new String[] {
-						"STT", "Mã vé", "Mã Chi Tiết", "Hạng", "Khuyến mãi", "giá"
-				}
-				);
-		table_DSV.setRowHeight(30);
-		table_DSV.setModel(model_DSV);
-		scrollPane_DSV.setViewportView(table_DSV);
+		txtMaVe = new RoundedTextField(10);
+		txtMaVe.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtMaVe.setEditable(false);
+		txtMaVe.setBounds(130, 10, 250, 30);
+		panel_6.add(txtMaVe);
+
+		JLabel lblHangVe = new JLabel("Hạng vé:");
+		lblHangVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblHangVe.setBounds(20, 50, 100, 25);
+		panel_6.add(lblHangVe);
+
+		txtHangVe = new RoundedTextField(10);
+		txtHangVe.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtHangVe.setEditable(false);
+		txtHangVe.setBounds(130, 50, 250, 30);
+		panel_6.add(txtHangVe);
+
+		JLabel lblKhuyenMai = new JLabel("Khuyến mãi:");
+		lblKhuyenMai.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblKhuyenMai.setBounds(20, 90, 100, 25);
+		panel_6.add(lblKhuyenMai);
+
+		txtKhuyenMai = new RoundedTextField(10);
+		txtKhuyenMai.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtKhuyenMai.setEditable(false);
+		txtKhuyenMai.setBounds(130, 90, 250, 30);
+		panel_6.add(txtKhuyenMai);
+
+		JLabel lblGiaVe = new JLabel("Giá vé:");
+		lblGiaVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblGiaVe.setBounds(20, 130, 100, 25);
+		panel_6.add(lblGiaVe);
+
+		txtGiaVe = new RoundedTextField(10);
+		txtGiaVe.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtGiaVe.setEditable(false);
+		txtGiaVe.setBounds(130, 130, 250, 30);
+		panel_6.add(txtGiaVe);
+
+		// Cột 2
+		JLabel lblGaDi = new JLabel("Ga đi:");
+		lblGaDi.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblGaDi.setBounds(450, 10, 100, 25);
+		panel_6.add(lblGaDi);
+
+		txtGaDi = new RoundedTextField(10);
+		txtGaDi.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtGaDi.setEditable(false);
+		txtGaDi.setBounds(560, 10, 250, 30);
+		panel_6.add(txtGaDi);
+
+		JLabel lblGaDen = new JLabel("Ga đến:");
+		lblGaDen.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblGaDen.setBounds(450, 50, 100, 25);
+		panel_6.add(lblGaDen);
+
+		txtGaDen = new RoundedTextField(10);
+		txtGaDen.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtGaDen.setEditable(false);
+		txtGaDen.setBounds(560, 50, 250, 30);
+		panel_6.add(txtGaDen);
+
+		JLabel lblThoiGianDi = new JLabel("Thời gian đi:");
+		lblThoiGianDi.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblThoiGianDi.setBounds(450, 90, 100, 25);
+		panel_6.add(lblThoiGianDi);
+
+		txtThoiGianDi = new RoundedTextField(10);
+		txtThoiGianDi.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtThoiGianDi.setEditable(false);
+		txtThoiGianDi.setBounds(560, 90, 250, 30);
+		panel_6.add(txtThoiGianDi);
+
+		JLabel lblThoiGianDen = new JLabel("Thời gian đến:");
+		lblThoiGianDen.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblThoiGianDen.setBounds(450, 130, 110, 25);
+		panel_6.add(lblThoiGianDen);
+
+		txtThoiGianDen = new RoundedTextField(10);
+		txtThoiGianDen.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtThoiGianDen.setEditable(false);
+		txtThoiGianDen.setBounds(560, 130, 250, 30);
+		panel_6.add(txtThoiGianDen);
+
+		// Cột 3 - Thông tin khách hàng và chỗ ngồi
+		JLabel lblTenKhachHang = new JLabel("Tên khách hàng:");
+		lblTenKhachHang.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTenKhachHang.setBounds(870, 10, 120, 25);
+		panel_6.add(lblTenKhachHang);
+
+		txtTenKhachHang = new RoundedTextField(10);
+		txtTenKhachHang.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtTenKhachHang.setEditable(false);
+		txtTenKhachHang.setBounds(1000, 10, 130, 30);
+		panel_6.add(txtTenKhachHang);
+
+		JLabel lblSoDienThoai = new JLabel("Số điện thoại:");
+		lblSoDienThoai.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSoDienThoai.setBounds(870, 50, 120, 25);
+		panel_6.add(lblSoDienThoai);
+
+		txtSoDienThoai = new RoundedTextField(10);
+		txtSoDienThoai.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtSoDienThoai.setEditable(false);
+		txtSoDienThoai.setBounds(1000, 50, 130, 30);
+		panel_6.add(txtSoDienThoai);
+
+		JLabel lblToa = new JLabel("Toa:");
+		lblToa.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblToa.setBounds(870, 90, 120, 25);
+		panel_6.add(lblToa);
+
+		txtToa = new RoundedTextField(10);
+		txtToa.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtToa.setEditable(false);
+		txtToa.setBounds(1000, 90, 130, 30);
+		panel_6.add(txtToa);
+
+		JLabel lblChoNgoi = new JLabel("Chỗ ngồi:");
+		lblChoNgoi.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblChoNgoi.setBounds(870, 130, 120, 25);
+		panel_6.add(lblChoNgoi);
+
+		txtChoNgoi = new RoundedTextField(10);
+		txtChoNgoi.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtChoNgoi.setEditable(false);
+		txtChoNgoi.setBounds(1000, 130, 130, 30);
+		panel_6.add(txtChoNgoi);
 
 		btn_XuatHD = new RoundedButton("Xuất hóa đơn", 15);
 		btn_XuatHD.setForeground(new Color(255, 255, 255));
@@ -456,42 +592,94 @@ public class ChiTietHoaDon_GUI extends JPanel implements ActionListener,MouseLis
 		// TODO Auto-generated method stub
 		int row = table_CTHD.getSelectedRow();
 		if (row != -1) {
-			model_DSV.setRowCount(0);
-			ChiTietHoaDon cthd =dsCTHD.getCTHDTheoMaChiTiet(table_CTHD.getValueAt(row, 1).toString());
+			// Xóa thông tin vé cũ
+			clearVeInfo();
+
+			ChiTietHoaDon cthd = dsCTHD.getCTHDTheoMaChiTiet(table_CTHD.getValueAt(row, 1).toString());
 			ArrayList<Ve> danhSachVe = dsVe.getDsVeTheoMaChiTiet(cthd.getMaChiTiet());
-			int stt = 1; // Biến đếm bắt đầu từ 1 cho STT
-			for (Ve ve : danhSachVe) {
-				model_DSV.addRow(new Object[] { 
-						stt++, 
-						ve.getMaVe(),
-						ve.getChiTiet().getMaChiTiet(),
-						ve.getHang(), 
-						ve.getKhuyenMai(),
-						dinhDangTienTe(ve.tinhGiaVe())
-				});
+
+			// Hiển thị thông tin vé đầu tiên nếu có
+			if (danhSachVe != null && !danhSachVe.isEmpty()) {
+				Ve ve = danhSachVe.get(0); // Lấy vé đầu tiên
+				displayVeInfo(ve);
 			}
 		}
-
 	}
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    // Phương thức hiển thị thông tin vé
+	private void displayVeInfo(Ve ve) {
+		txtMaVe.setText(ve.getMaVe());
+		txtHangVe.setText(ve.getHang());
+		txtKhuyenMai.setText(String.valueOf(ve.getKhuyenMai()));
+		txtGiaVe.setText(dinhDangTienTe(ve.tinhGiaVe()));
+
+		// Hiển thị thông tin ga và thời gian
+		if (ve.getGaDi() != null) {
+			txtGaDi.setText(ve.getGaDi().getTenGa());
+		}
+		if (ve.getGaDen() != null) {
+			txtGaDen.setText(ve.getGaDen().getTenGa());
+		}
+		if (ve.getNgayDi() != null && ve.getGioDi() != null) {
+			txtThoiGianDi.setText(ve.getNgayDi().toString() + " " + ve.getGioDi().toString());
+		}
+		if (ve.getNgayDen() != null && ve.getGioDen() != null) {
+			txtThoiGianDen.setText(ve.getNgayDen().toString() + " " + ve.getGioDen().toString());
+		}
+
+		// Hiển thị thông tin khách hàng
+		if (ve.getKhachHang() != null) {
+			txtTenKhachHang.setText(ve.getKhachHang().getTenKH());
+			txtSoDienThoai.setText(ve.getKhachHang().getSdt());
+		} else {
+			txtTenKhachHang.setText("N/A");
+			txtSoDienThoai.setText("N/A");
+		}
+
+		// Hiển thị thông tin toa và chỗ ngồi
+		if (ve.getSoGhe() != null) {
+			txtToa.setText(ve.getToa().getMaToa());
+			txtChoNgoi.setText(ve.getSoGhe().getSoGhe() + "");
+		} else {
+			txtToa.setText("N/A");
+			txtChoNgoi.setText("N/A");
+		}
 	}
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 
-	}
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+	// Phương thức xóa thông tin vé
+	private void clearVeInfo() {
+		txtMaVe.setText("");
+		txtHangVe.setText("");
+		txtKhuyenMai.setText("");
+		txtGiaVe.setText("");
+		txtGaDi.setText("");
+		txtGaDen.setText("");
+		txtThoiGianDi.setText("");
+		txtThoiGianDen.setText("");
+		txtTenKhachHang.setText("");
+		txtSoDienThoai.setText("");
+		txtToa.setText("");
+		txtChoNgoi.setText("");
 	}
 
 	// Lớp FilterListener để lắng nghe các thay đổi trong các ô tìm kiếm
