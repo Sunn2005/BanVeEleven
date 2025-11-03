@@ -414,6 +414,10 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
         if (o.equals(btnXoa)) {
             int row = table_CT.getSelectedRow();
             if (row == -1) {
+                JOptionPane.showMessageDialog(this, 
+                    "Vui lòng chọn chuyến tàu cần xóa từ bảng!", 
+                    "Lỗi - Chưa chọn dòng cần xóa", 
+                    JOptionPane.WARNING_MESSAGE);
                 JOptionPane.showMessageDialog(this, "Chọn chuyến tàu muốn xóa!");
                 return;
             }
