@@ -679,7 +679,7 @@ public class QuanLyChuyenTau_GUI extends JPanel implements ActionListener, Mouse
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, 
                     "Vui lòng chọn chuyến tàu cần xóa từ bảng!", 
-                    "Lỗi - Chưa chọn dòng", 
+                    "Lỗi - Chưa chọn dòng cần xóa", 
                     JOptionPane.WARNING_MESSAGE);
                 return;
             }
