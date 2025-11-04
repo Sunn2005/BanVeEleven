@@ -386,86 +386,163 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		panel_1.add(textField_TTL);
 		textField_TTL.setEditable(false);
 		btn_XacNhan = new JButton("Xác nhận");
+		// ==================== CODE CHO CONSTRUCTOR 1: BanVe_GUI ====================
 		btn_XacNhan.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (tienTraLai < 0) {
-					JOptionPane.showMessageDialog(null, "Số tiền trả lại không được âm!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				
-				// Tạo khách hàng
-				Boolean khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.khachHangMua);
-				if (!khachHangExist) {
-					khachHang_DAO.create(banVeNhapThongTin_GUI.khachHangMua);
-				}
-				khachHang_DAO.reset();
-				dsKH.removeAll(dsKH);
-				dsKH = khachHang_DAO.docTuBang();
-				for (int key: banVeNhapThongTin_GUI.map.keySet()) {
-					KhachHang khachHangMoi = banVeNhapThongTin_GUI.map.get(key);
-					khachHangExist = (dsKH.contains(khachHangMoi) || khachHangMoi.getSdt().equals(banVeNhapThongTin_GUI.khachHangMua.getSdt()));
-					if (!khachHangExist) {
-						banVeNhapThongTin_GUI.map.get(key).setMaKH(generateMaKH());
-						khachHang_DAO.create(banVeNhapThongTin_GUI.map.get(key));
-					} else {
-						banVeNhapThongTin_GUI.map.get(key).setMaKH(banVeNhapThongTin_GUI.khachHangMua.getMaKH());
-					}
-				}
-				
-				// Tạo hóa đơn
-				hoaDon_DAO.reset();
-				ArrayList<HoaDon> dsHD = hoaDon_DAO.docTuBang();
-				String maHD = generateMaHD(dsHD, trangChu.dangNhap.taiKhoanLogined.getNhanVien().getMaNV());
-				LocalDateTime ngayLapHoaDon = LocalDateTime.now();
-				NhanVien nhanVien = trangChu.dangNhap.taiKhoanLogined.getNhanVien();
-				KhachHang khachHang = banVeNhapThongTin_GUI.khachHangMua;
-				ChiTietHoaDon chiTiet = null;
-				HoaDon hoaDon = new HoaDon(maHD, ngayLapHoaDon, nhanVien, khachHang, chiTiet, false, false);
-				hoaDon_DAO.create(hoaDon);
-				
-				// Tạo chi tiết hóa đơn
-				String maCT = "CT" + maHD;
-				int soLuong = banVe_GUI.dsVeDatTam.size();
-				ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(maCT, hoaDon, soLuong, banVe_GUI.dsVeDatTam, 0.1f);
-				chiTietHoaDon_DAO.create(chiTietHoaDon);
-				
-				
-				// Tạo danh sách vé
-				String datePart = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyy")); // Ngày lập vé
+		    public void actionPerformed(ActionEvent e) {
+		        // 1. Kiểm tra danh sách vé có rỗng không
+		        if (banVe_GUI.dsVeDatTam == null || banVe_GUI.dsVeDatTam.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, 
+		                "Không có vé nào để thanh toán!", 
+		                "Thông báo", 
+		                JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+		        
+		        // 2. Kiểm tra tổng tiền có hợp lệ không
+		        if (tongTienCoThue <= 0) {
+		            JOptionPane.showMessageDialog(null, 
+		                "Tổng tiền thanh toán không hợp lệ!", 
+		                "Thông báo", 
+		                JOptionPane.ERROR_MESSAGE);
+		            return;
+		        }
+		        
+		        // 3. Kiểm tra tiền khách đưa
+		        if (tienKhachDua <= 0) {
+		            JOptionPane.showMessageDialog(null, 
+		                "Vui lòng nhập số tiền khách đưa!", 
+		                "Thông báo", 
+		                JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+		        
+		        // 4. Kiểm tra tiền khách đưa có đủ không
+		        if (tienKhachDua < tongTienCoThue) {
+		            JOptionPane.showMessageDialog(null, 
+		                "Số tiền khách đưa chưa đủ!\n" +
+		                "Tổng tiền cần thanh toán: " + dinhDangTienTe(tongTienCoThue) + "\n" +
+		                "Số tiền khách đưa: " + dinhDangTienTe(tienKhachDua) + "\n" +
+		                "Còn thiếu: " + dinhDangTienTe(tongTienCoThue - tienKhachDua), 
+		                "Thông báo", 
+		                JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+		        
+		        // 5. Kiểm tra số tiền trả lại có âm không (double check)
+		        if (tienTraLai < 0) {
+		            JOptionPane.showMessageDialog(null, 
+		                "Số tiền trả lại không hợp lệ!", 
+		                "Thông báo", 
+		                JOptionPane.ERROR_MESSAGE);
+		            return;
+		        }
+		        
+		        // 6. Kiểm tra thông tin khách hàng
+		        if (banVeNhapThongTin_GUI.khachHangMua == null) {
+		            JOptionPane.showMessageDialog(null, 
+		                "Thông tin khách hàng không hợp lệ!", 
+		                "Thông báo", 
+		                JOptionPane.ERROR_MESSAGE);
+		            return;
+		        }
+		        
+		        // 7. Xác nhận lại với người dùng trước khi thanh toán
+		        int confirm = JOptionPane.showConfirmDialog(null, 
+		            "Xác nhận thanh toán?\n\n" +
+		            "Tổng tiền: " + dinhDangTienTe(tongTienCoThue) + "\n" +
+		            "Tiền khách đưa: " + dinhDangTienTe(tienKhachDua) + "\n" +
+		            "Tiền trả lại: " + dinhDangTienTe(tienTraLai) + "\n" +
+		            "Số lượng vé: " + banVe_GUI.dsVeDatTam.size(),
+		            "Xác nhận thanh toán",
+		            JOptionPane.YES_NO_OPTION,
+		            JOptionPane.QUESTION_MESSAGE);
+		        
+		        if (confirm != JOptionPane.YES_OPTION) {
+		            return;
+		        }
+		        
+		        // 8. Thực hiện thanh toán
+		        try {
+		            // Tạo khách hàng
+		            Boolean khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.khachHangMua);
+		            if (!khachHangExist) {
+		                khachHang_DAO.create(banVeNhapThongTin_GUI.khachHangMua);
+		            }
+		            khachHang_DAO.reset();
+		            dsKH.removeAll(dsKH);
+		            dsKH = khachHang_DAO.docTuBang();
+		            
+		            for (int key: banVeNhapThongTin_GUI.map.keySet()) {
+		                KhachHang khachHangMoi = banVeNhapThongTin_GUI.map.get(key);
+		                khachHangExist = (dsKH.contains(khachHangMoi) || 
+		                                 khachHangMoi.getSdt().equals(banVeNhapThongTin_GUI.khachHangMua.getSdt()));
+		                if (!khachHangExist) {
+		                    banVeNhapThongTin_GUI.map.get(key).setMaKH(generateMaKH());
+		                    khachHang_DAO.create(banVeNhapThongTin_GUI.map.get(key));
+		                } else {
+		                    banVeNhapThongTin_GUI.map.get(key).setMaKH(banVeNhapThongTin_GUI.khachHangMua.getMaKH());
+		                }
+		            }
+		            
+		            // Tạo hóa đơn
+		            hoaDon_DAO.reset();
+		            ArrayList<HoaDon> dsHD = hoaDon_DAO.docTuBang();
+		            String maHD = generateMaHD(dsHD, trangChu.dangNhap.taiKhoanLogined.getNhanVien().getMaNV());
+		            LocalDateTime ngayLapHoaDon = LocalDateTime.now();
+		            NhanVien nhanVien = trangChu.dangNhap.taiKhoanLogined.getNhanVien();
+		            KhachHang khachHang = banVeNhapThongTin_GUI.khachHangMua;
+		            ChiTietHoaDon chiTiet = null;
+		            HoaDon hoaDon = new HoaDon(maHD, ngayLapHoaDon, nhanVien, khachHang, chiTiet, false, false);
+		            hoaDon_DAO.create(hoaDon);
+		            
+		            // Tạo chi tiết hóa đơn
+		            String maCT = "CT" + maHD;
+		            int soLuong = banVe_GUI.dsVeDatTam.size();
+		            ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(maCT, hoaDon, soLuong, banVe_GUI.dsVeDatTam, 0.1f);
+		            chiTietHoaDon_DAO.create(chiTietHoaDon);
+		            
+		            // Tạo danh sách vé
+		            String datePart = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyy"));
+		            int currentVeNumber = ve_DAO.getLastVeNumber(datePart);
 
-				// Lấy số thứ tự vé trong ngày, bắt đầu từ 0001
-				int currentVeNumber = ve_DAO.getLastVeNumber(datePart); // Lấy số thứ tự vé cuối cùng từ cơ sở dữ liệu
+		            for (Ve ve: banVe_GUI.dsVeDatTam) {
+		                String maVe = "VE" + datePart + String.format("%04d", currentVeNumber + 1);
+		                ve.setMaVe(maVe);
+		                ve.setKhachHang(banVeNhapThongTin_GUI.map.get(banVe_GUI.dsVeDatTam.indexOf(ve)));
+		                ve.setChiTiet(chiTietHoaDon);
+		                ve_DAO.create(ve);
 
-				for (Ve ve: banVe_GUI.dsVeDatTam) {
-				    // Tạo mã vé cho từng vé
-				    String maVe = "VE" + datePart + String.format("%04d", currentVeNumber + 1); // Tăng số thứ tự lên 1
-				    ve.setMaVe(maVe);
-
-				    // Cập nhật thông tin vé
-				    ve.setKhachHang(banVeNhapThongTin_GUI.map.get(banVe_GUI.dsVeDatTam.indexOf(ve)));
-				    ve.setChiTiet(chiTietHoaDon);
-				    
-				    // Gọi phương thức tạo vé
-				    ve_DAO.create(ve);
-
-				    // Cập nhật trạng thái ghế
-				    Ghe ghe = ve.getSoGhe();
-				    ghe.setTrangThai(false);
-				    ghe_DAO.update(ghe);
-
-				    // Tăng số thứ tự vé cho lần tạo tiếp theo
-				    currentVeNumber++;
-				    
-				    JOptionPane.showMessageDialog(null,"Đặt vé thành công!\nLập hóa đơn thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE, 
-			                new ImageIcon(getClass().getResource("/img/299110_check_sign_icon.png")));
-				    
-				    QuanLyVe_Gui quanLyVe_gui = new QuanLyVe_Gui(trangChu);
-					trangChu.content.removeAll();
-					trangChu.content.add(quanLyVe_gui);
-					trangChu.content.revalidate();
-					trangChu.content.repaint();
-				}
-			}
+		                Ghe ghe = ve.getSoGhe();
+		                ghe.setTrangThai(false);
+		                ghe_DAO.update(ghe);
+		                currentVeNumber++;
+		            }
+		            
+		            // Thông báo thành công
+		            JOptionPane.showMessageDialog(null,
+		                "Đặt vé thành công!\nLập hóa đơn thành công!\n" +
+		                "Mã hóa đơn: " + maHD + "\n" +
+		                "Tiền trả lại khách: " + dinhDangTienTe(tienTraLai), 
+		                "Thông báo", 
+		                JOptionPane.INFORMATION_MESSAGE, 
+		                new ImageIcon(getClass().getResource("/img/299110_check_sign_icon.png")));
+		            
+		            // Chuyển sang màn hình quản lý vé
+		            QuanLyVe_Gui quanLyVe_gui = new QuanLyVe_Gui(trangChu);
+		            trangChu.content.removeAll();
+		            trangChu.content.add(quanLyVe_gui);
+		            trangChu.content.revalidate();
+		            trangChu.content.repaint();
+		            
+		        } catch (Exception ex) {
+		            // Xử lý lỗi trong quá trình thanh toán
+		            JOptionPane.showMessageDialog(null, 
+		                "Có lỗi xảy ra trong quá trình thanh toán!\n" + ex.getMessage(), 
+		                "Lỗi", 
+		                JOptionPane.ERROR_MESSAGE);
+		            ex.printStackTrace();
+		        }
+		    }
 		});
 		btn_XacNhan.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btn_XacNhan.setBounds(301, 472, 106, 30);
@@ -828,103 +905,208 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		panel_1.add(textField_TTL);
 		textField_TTL.setEditable(false);
 		btn_XacNhan = new JButton("Xác nhận");
+		// ==================== CODE CHO CONSTRUCTOR 2: DoiVe_GUI ====================
 		btn_XacNhan.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (tienTraLai < 0) {
-					JOptionPane.showMessageDialog(null, "Số tiền trả lại không được âm!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				// Cập nhật trạng thái ghế
-			    Ghe gheCu = doiVe_GUI.veCu.getSoGhe();
-			    gheCu.setTrangThai(true);
-			    ghe_DAO.update(gheCu);
-				doiVe_GUI.veCu.setTrangThai(true);
-				
-				ChiTietHoaDon chiTietVeCu = chiTietHoaDon_DAO.getCTHDTheoMaChiTiet(doiVe_GUI.veCu.getChiTiet().getMaChiTiet());
-				ve_DAO.update(doiVe_GUI.veCu);
-				if (chiTietVeCu.getSoLuong() == 1) {
-					HoaDon hdCu = hoaDon_DAO.getHoaDonTheoMaHoaDon(chiTietVeCu.getHoaDon().getMaHoaDon());
-					hdCu.setDaHoanTien(true);
-					hdCu.setDaHoanVe(true);
-					hoaDon_DAO.update(hdCu);
-				} else {
-					doiVe_GUI.veCu.getChiTiet().setSoLuong(chiTietVeCu.getSoLuong()-1);					
-					chiTietHoaDon_DAO.updateSoLuongVe(chiTietVeCu);
-				}
-				
-				// Tạo khách hàng
-				Boolean khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.khachHangMua);
-				if (!khachHangExist) {
-					khachHang_DAO.create(banVeNhapThongTin_GUI.khachHangMua);
-				}
-				khachHang_DAO.reset();
-				dsKH.removeAll(dsKH);
-				dsKH = khachHang_DAO.docTuBang();
-				for (int key: banVeNhapThongTin_GUI.map.keySet()) {
-					KhachHang khachHangMoi = banVeNhapThongTin_GUI.map.get(key);
-					khachHangExist = (dsKH.contains(khachHangMoi) || khachHangMoi.getSdt().equals(banVeNhapThongTin_GUI.khachHangMua.getSdt()));
-					if (!khachHangExist) {
-						banVeNhapThongTin_GUI.map.get(key).setMaKH(generateMaKH());
-						khachHang_DAO.create(banVeNhapThongTin_GUI.map.get(key));
-					} else {
-						banVeNhapThongTin_GUI.map.get(key).setMaKH(banVeNhapThongTin_GUI.khachHangMua.getMaKH());
-					}
-				}
-				
-				// Tạo hóa đơn
-				hoaDon_DAO.reset();
-				ArrayList<HoaDon> dsHD = hoaDon_DAO.docTuBang();
-				String maHD = generateMaHD(dsHD, trangChu.dangNhap.taiKhoanLogined.getNhanVien().getMaNV());
-				LocalDateTime ngayLapHoaDon = LocalDateTime.now();
-				NhanVien nhanVien = trangChu.dangNhap.taiKhoanLogined.getNhanVien();
-				KhachHang khachHang = banVeNhapThongTin_GUI.khachHangMua;
-				ChiTietHoaDon chiTiet = null;
-				HoaDon hoaDon = new HoaDon(maHD, ngayLapHoaDon, nhanVien, khachHang, chiTiet, false, false);
-				hoaDon_DAO.create(hoaDon);
-				
-				// Tạo chi tiết hóa đơn
-				String maCT = "CT" + maHD;
-				int soLuong = doiVe_GUI.dsVeDatTam.size();
-				ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(maCT, hoaDon, soLuong, doiVe_GUI.dsVeDatTam, 0.1f);
-				chiTietHoaDon_DAO.create(chiTietHoaDon);
-				
-				
-				// Tạo danh sách vé
-				String datePart = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyy")); // Ngày lập vé
+		    public void actionPerformed(ActionEvent e) {
+		        // 1. Kiểm tra danh sách vé có rỗng không
+		        if (doiVe_GUI.dsVeDatTam == null || doiVe_GUI.dsVeDatTam.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, 
+		                "Không có vé nào để đổi!", 
+		                "Thông báo", 
+		                JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+		        
+		        // 2. Kiểm tra vé cũ
+		        if (doiVe_GUI.veCu == null) {
+		            JOptionPane.showMessageDialog(null, 
+		                "Không tìm thấy thông tin vé cũ!", 
+		                "Thông báo", 
+		                JOptionPane.ERROR_MESSAGE);
+		            return;
+		        }
+		        
+		        // 3. Tính toán giá chênh lệch
+		        float giaVeCu = doiVe_GUI.veCu.tinhGiaVe() * 1.1f;
+		        float giaVeMoi = doiVe_GUI.dsVeDatTam.get(0).tinhGiaVe() * 1.1f;
+		        float tienChenhLech = giaVeCu - giaVeMoi;
+		        
+		        // 4. Kiểm tra tiền khách đưa nếu vé mới đắt hơn
+		        if (tienChenhLech < 0) {
+		            float tienCanThu = Math.abs(tienChenhLech);
+		            
+		            if (tienKhachDua <= 0) {
+		                JOptionPane.showMessageDialog(null, 
+		                    "Vé mới đắt hơn vé cũ!\nVui lòng nhập số tiền khách đưa!", 
+		                    "Thông báo", 
+		                    JOptionPane.WARNING_MESSAGE);
+		                return;
+		            }
+		            
+		            if (tienKhachDua < tienCanThu) {
+		                JOptionPane.showMessageDialog(null, 
+		                    "Số tiền khách đưa chưa đủ!\n" +
+		                    "Giá vé cũ: " + dinhDangTienTe(giaVeCu) + "\n" +
+		                    "Giá vé mới: " + dinhDangTienTe(giaVeMoi) + "\n" +
+		                    "Cần thu thêm: " + dinhDangTienTe(tienCanThu) + "\n" +
+		                    "Số tiền khách đưa: " + dinhDangTienTe(tienKhachDua) + "\n" +
+		                    "Còn thiếu: " + dinhDangTienTe(tienCanThu - tienKhachDua), 
+		                    "Thông báo", 
+		                    JOptionPane.WARNING_MESSAGE);
+		                return;
+		            }
+		            
+		            if (tienTraLai < 0) {
+		                JOptionPane.showMessageDialog(null, 
+		                    "Số tiền trả lại không hợp lệ!", 
+		                    "Thông báo", 
+		                    JOptionPane.ERROR_MESSAGE);
+		                return;
+		            }
+		        }
+		        
+		        // 5. Kiểm tra thông tin khách hàng
+		        if (banVeNhapThongTin_GUI.khachHangMua == null) {
+		            JOptionPane.showMessageDialog(null, 
+		                "Thông tin khách hàng không hợp lệ!", 
+		                "Thông báo", 
+		                JOptionPane.ERROR_MESSAGE);
+		            return;
+		        }
+		        
+		        // 6. Xác nhận lại với người dùng
+		        String message = "Xác nhận đổi vé?\n\n" +
+		                        "Giá vé cũ: " + dinhDangTienTe(giaVeCu) + "\n" +
+		                        "Giá vé mới: " + dinhDangTienTe(giaVeMoi) + "\n";
+		        
+		        if (tienChenhLech > 0) {
+		            message += "Tiền hoàn trả khách: " + dinhDangTienTe(tienChenhLech);
+		        } else if (tienChenhLech < 0) {
+		            message += "Cần thu thêm: " + dinhDangTienTe(Math.abs(tienChenhLech)) + "\n" +
+		                      "Tiền khách đưa: " + dinhDangTienTe(tienKhachDua) + "\n" +
+		                      "Tiền trả lại: " + dinhDangTienTe(tienTraLai);
+		        } else {
+		            message += "Không có chênh lệch giá";
+		        }
+		        
+		        int confirm = JOptionPane.showConfirmDialog(null, 
+		            message,
+		            "Xác nhận đổi vé",
+		            JOptionPane.YES_NO_OPTION,
+		            JOptionPane.QUESTION_MESSAGE);
+		        
+		        if (confirm != JOptionPane.YES_OPTION) {
+		            return;
+		        }
+		        
+		        // 7. Thực hiện đổi vé
+		        try {
+		            // Cập nhật trạng thái ghế cũ
+		            Ghe gheCu = doiVe_GUI.veCu.getSoGhe();
+		            gheCu.setTrangThai(true);
+		            ghe_DAO.update(gheCu);
+		            doiVe_GUI.veCu.setTrangThai(true);
+		            
+		            ChiTietHoaDon chiTietVeCu = chiTietHoaDon_DAO.getCTHDTheoMaChiTiet(doiVe_GUI.veCu.getChiTiet().getMaChiTiet());
+		            ve_DAO.update(doiVe_GUI.veCu);
+		            
+		            if (chiTietVeCu.getSoLuong() == 1) {
+		                HoaDon hdCu = hoaDon_DAO.getHoaDonTheoMaHoaDon(chiTietVeCu.getHoaDon().getMaHoaDon());
+		                hdCu.setDaHoanTien(true);
+		                hdCu.setDaHoanVe(true);
+		                hoaDon_DAO.update(hdCu);
+		            } else {
+		                doiVe_GUI.veCu.getChiTiet().setSoLuong(chiTietVeCu.getSoLuong()-1);					
+		                chiTietHoaDon_DAO.updateSoLuongVe(chiTietVeCu);
+		            }
+		            
+		            // Tạo khách hàng
+		            Boolean khachHangExist = dsKH.contains(banVeNhapThongTin_GUI.khachHangMua);
+		            if (!khachHangExist) {
+		                khachHang_DAO.create(banVeNhapThongTin_GUI.khachHangMua);
+		            }
+		            khachHang_DAO.reset();
+		            dsKH.removeAll(dsKH);
+		            dsKH = khachHang_DAO.docTuBang();
+		            
+		            for (int key: banVeNhapThongTin_GUI.map.keySet()) {
+		                KhachHang khachHangMoi = banVeNhapThongTin_GUI.map.get(key);
+		                khachHangExist = (dsKH.contains(khachHangMoi) || 
+		                                 khachHangMoi.getSdt().equals(banVeNhapThongTin_GUI.khachHangMua.getSdt()));
+		                if (!khachHangExist) {
+		                    banVeNhapThongTin_GUI.map.get(key).setMaKH(generateMaKH());
+		                    khachHang_DAO.create(banVeNhapThongTin_GUI.map.get(key));
+		                } else {
+		                    banVeNhapThongTin_GUI.map.get(key).setMaKH(banVeNhapThongTin_GUI.khachHangMua.getMaKH());
+		                }
+		            }
+		            
+		            // Tạo hóa đơn
+		            hoaDon_DAO.reset();
+		            ArrayList<HoaDon> dsHD = hoaDon_DAO.docTuBang();
+		            String maHD = generateMaHD(dsHD, trangChu.dangNhap.taiKhoanLogined.getNhanVien().getMaNV());
+		            LocalDateTime ngayLapHoaDon = LocalDateTime.now();
+		            NhanVien nhanVien = trangChu.dangNhap.taiKhoanLogined.getNhanVien();
+		            KhachHang khachHang = banVeNhapThongTin_GUI.khachHangMua;
+		            ChiTietHoaDon chiTiet = null;
+		            HoaDon hoaDon = new HoaDon(maHD, ngayLapHoaDon, nhanVien, khachHang, chiTiet, false, false);
+		            hoaDon_DAO.create(hoaDon);
+		            
+		            // Tạo chi tiết hóa đơn
+		            String maCT = "CT" + maHD;
+		            int soLuong = doiVe_GUI.dsVeDatTam.size();
+		            ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(maCT, hoaDon, soLuong, doiVe_GUI.dsVeDatTam, 0.1f);
+		            chiTietHoaDon_DAO.create(chiTietHoaDon);
+		            
+		            // Tạo danh sách vé
+		            String datePart = LocalDate.now().format(DateTimeFormatter.ofPattern("ddMMyy"));
+		            int currentVeNumber = ve_DAO.getLastVeNumber(datePart);
 
-				// Lấy số thứ tự vé trong ngày, bắt đầu từ 0001
-				int currentVeNumber = ve_DAO.getLastVeNumber(datePart); // Lấy số thứ tự vé cuối cùng từ cơ sở dữ liệu
+		            for (Ve ve: doiVe_GUI.dsVeDatTam) {
+		                String maVe = "VE" + datePart + String.format("%04d", currentVeNumber + 1);
+		                ve.setMaVe(maVe);
+		                ve.setKhachHang(banVeNhapThongTin_GUI.map.get(doiVe_GUI.dsVeDatTam.indexOf(ve)));
+		                ve.setChiTiet(chiTietHoaDon);
+		                ve_DAO.create(ve);
 
-				for (Ve ve: doiVe_GUI.dsVeDatTam) {
-				    // Tạo mã vé cho từng vé
-				    String maVe = "VE" + datePart + String.format("%04d", currentVeNumber + 1); // Tăng số thứ tự lên 1
-				    ve.setMaVe(maVe);
-
-				    // Cập nhật thông tin vé
-				    ve.setKhachHang(banVeNhapThongTin_GUI.map.get(doiVe_GUI.dsVeDatTam.indexOf(ve)));
-				    ve.setChiTiet(chiTietHoaDon);
-				    
-				    // Gọi phương thức tạo vé
-				    ve_DAO.create(ve);
-
-				    // Cập nhật trạng thái ghế
-				    Ghe ghe = ve.getSoGhe();
-				    ghe.setTrangThai(false);
-				    ghe_DAO.update(ghe);
-
-				    // Tăng số thứ tự vé cho lần tạo tiếp theo
-				    currentVeNumber++;
-				}
-				
-				JOptionPane.showMessageDialog(null,"Đã đổi vé thành công!\nLập hóa đơn mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE, 
+		                Ghe ghe = ve.getSoGhe();
+		                ghe.setTrangThai(false);
+		                ghe_DAO.update(ghe);
+		                currentVeNumber++;
+		            }
+		            
+		            // Thông báo thành công
+		            String successMsg = "Đã đổi vé thành công!\nLập hóa đơn mới thành công!\n" +
+		                               "Mã hóa đơn: " + maHD + "\n";
+		            
+		            if (tienChenhLech > 0) {
+		                successMsg += "Tiền hoàn trả khách: " + dinhDangTienTe(tienChenhLech);
+		            } else if (tienChenhLech < 0) {
+		                successMsg += "Tiền trả lại khách: " + dinhDangTienTe(tienTraLai);
+		            }
+		            
+		            JOptionPane.showMessageDialog(null,
+		                successMsg, 
+		                "Thông báo", 
+		                JOptionPane.INFORMATION_MESSAGE, 
 		                new ImageIcon(getClass().getResource("/img/299110_check_sign_icon.png")));
-				
-			    QuanLyVe_Gui quanLyVe_gui = new QuanLyVe_Gui(trangChu);
-				trangChu.content.removeAll();
-				trangChu.content.add(quanLyVe_gui);
-				trangChu.content.revalidate();
-				trangChu.content.repaint();
-			}
+		            
+		            // Chuyển sang màn hình quản lý vé
+		            QuanLyVe_Gui quanLyVe_gui = new QuanLyVe_Gui(trangChu);
+		            trangChu.content.removeAll();
+		            trangChu.content.add(quanLyVe_gui);
+		            trangChu.content.revalidate();
+		            trangChu.content.repaint();
+		            
+		        } catch (Exception ex) {
+		            // Xử lý lỗi trong quá trình đổi vé
+		            JOptionPane.showMessageDialog(null, 
+		                "Có lỗi xảy ra trong quá trình đổi vé!\n" + ex.getMessage(), 
+		                "Lỗi", 
+		                JOptionPane.ERROR_MESSAGE);
+		            ex.printStackTrace();
+		        }
+		    }
 		});
 		btn_XacNhan.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btn_XacNhan.setBounds(301, 472, 106, 30);
@@ -935,38 +1117,63 @@ public class BanVeThanhToan_GUI extends JPanel implements ActionListener{
 		btnXoa.setBounds(180, 472, 106, 30);
 		panel_1.add(btnXoa);
 		
+		//Sự kiện nút
+		btn1.addActionListener(this);
+		btn2.addActionListener(this);
+		btn5.addActionListener(this);
+		btn10.addActionListener(this);
+		btn20.addActionListener(this);
+		btn50.addActionListener(this);
+		btn100.addActionListener(this);
+		btn200.addActionListener(this);
+		btn500.addActionListener(this);
+
+		btnGoiY1.addActionListener(this);
+		btnGoiY2.addActionListener(this);
+		btnGoiY3.addActionListener(this);
+		
+		btnXoa.addActionListener(this);
+
+		tienGoiY(tongTienCoThue, goiY);
+		btnGoiY1.setText((long) goiY[0]+"");
+		btnGoiY2.setText((long) goiY[1]+"");
+		btnGoiY3.setText((long) goiY[2]+"");
+		
 		loadThongTin(doiVe_GUI.dsVeDatTam, banVeNhapThongTin_GUI.map);
 		
 		lb_GiaVeCu.setText(dinhDangTienTe(doiVe_GUI.veCu.tinhGiaVe()*1.1f));
 		float tienChenhLech = doiVe_GUI.veCu.tinhGiaVe()*1.1f - doiVe_GUI.dsVeDatTam.get(0).tinhGiaVe()*1.1f;
 		lb_GiaChenhLech.setText(dinhDangTienTe(Math.abs(tienChenhLech)));
-		if (tienChenhLech <= 0)
-			textField_TTL.setText(dinhDangTienTe(Math.abs(tienChenhLech)));
+		if (tienChenhLech < 0) {
+			 // Vé mới đắt hơn - cần thu thêm tiền
+		    tongTienCoThue = Math.abs(tienChenhLech);
+		    textField_TTL.setText(dinhDangTienTe(0));
+		    
+		    tienGoiY(tongTienCoThue, goiY);
+		    btnGoiY1.setText((long) goiY[0]+"");
+		    btnGoiY2.setText((long) goiY[1]+"");
+		    btnGoiY3.setText((long) goiY[2]+"");
+		}
 		else {
-			tongTienCoThue = tienChenhLech;
-			textField_TTL.setText("-"+dinhDangTienTe(Math.abs(tienChenhLech)));
+		    // Vé mới rẻ hơn - hoàn tiền cho khách
+		    tongTienCoThue = 0;
+		    textField_TTL.setText(dinhDangTienTe(tienChenhLech));
+		    textField_TKD.setText("Không cần thu thêm");
+		    
+		    // Vô hiệu hóa các nút nhập tiền
+		    btn1.setEnabled(false);
+		    btn2.setEnabled(false);
+		    btn5.setEnabled(false);
+		    btn10.setEnabled(false);
+		    btn20.setEnabled(false);
+		    btn50.setEnabled(false);
+		    btn100.setEnabled(false);
+		    btn200.setEnabled(false);
+		    btn500.setEnabled(false);
+		    btnGoiY1.setEnabled(false);
+		    btnGoiY2.setEnabled(false);
+		    btnGoiY3.setEnabled(false);
 			
-			//Sự kiện nút
-			btn1.addActionListener(this);
-			btn2.addActionListener(this);
-			btn5.addActionListener(this);
-			btn10.addActionListener(this);
-			btn20.addActionListener(this);
-			btn50.addActionListener(this);
-			btn100.addActionListener(this);
-			btn200.addActionListener(this);
-			btn500.addActionListener(this);
-
-			btnGoiY1.addActionListener(this);
-			btnGoiY2.addActionListener(this);
-			btnGoiY3.addActionListener(this);
-			
-			btnXoa.addActionListener(this);
-
-			tienGoiY(tongTienCoThue, goiY);
-			btnGoiY1.setText((long) goiY[0]+"");
-			btnGoiY2.setText((long) goiY[1]+"");
-			btnGoiY3.setText((long) goiY[2]+"");
 		}
 	}
 	

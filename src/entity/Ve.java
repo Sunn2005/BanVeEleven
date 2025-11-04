@@ -211,6 +211,12 @@ public class Ve {
 
 	public float tinhTiGia() {
 		float tiGia = 1;
+		
+		// Kiểm tra null trước khi sử dụng equalsIgnoreCase
+		if (khuyenMai == null || khuyenMai.trim().isEmpty()) {
+			return tiGia; // Trả về giá trị mặc định nếu khuyenMai là null hoặc rỗng
+		}
+		
 		if (khuyenMai.equalsIgnoreCase("Sinh viên"))
 			tiGia += -0.1;
 		else if (khuyenMai.equalsIgnoreCase("Người lớn"))
@@ -219,7 +225,8 @@ public class Ve {
 			tiGia += -0.15;
 		else if (khuyenMai.equalsIgnoreCase("Trẻ em từ 6 đến 10 tuổi"))
 			tiGia += -0.25;
-		else tiGia = 0;
+		else 
+			tiGia = 0;
 		return tiGia;
 	}
 	
@@ -455,7 +462,7 @@ public class Ve {
 				.setBorder(Border.NO_BORDER));
 			tableKH.addCell(
 					new Cell().add(new Paragraph("Đối tượng/Object: ").setFont(fontRegular)).setBorder(Border.NO_BORDER));
-			tableKH.addCell(new Cell(1,3).add(new Paragraph(khuyenMai).setFont(fontRegular))
+			tableKH.addCell(new Cell(1,3).add(new Paragraph(khuyenMai != null ? khuyenMai : "Người lớn").setFont(fontRegular))
 				.setBorder(Border.NO_BORDER));
 			
 			KhachHang khachHangNew = khachHang_DAO.getKhachHangTheoMaKH(khachHang.getMaKH());

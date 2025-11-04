@@ -46,6 +46,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -53,6 +54,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.awt.event.ActionEvent;
 import javax.swing.Icon;
 import javax.swing.JScrollPane;
@@ -105,6 +107,7 @@ public class BanVe_GUI extends JPanel {
 	private RoundedButton btnTim;
 	private RoundedButton btnMua;
 	private JScrollPane scrollPaneTinhTrangToa;
+	private JLabel lblTongTien;
 
 	/**
 	 * Create the panel.
@@ -438,6 +441,14 @@ public class BanVe_GUI extends JPanel {
 		jp_DanhSachVe.setLayout(null);
 		jp_DanhSachVe.setBounds(0, 0, 244, 122);
 		jp_Content_GioVe.add(jp_DanhSachVe);
+		
+		lblTongTien = new JLabel("Tổng tiền: 0 đ");
+		lblTongTien.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblTongTien.setForeground(new Color(51, 102, 153));
+		lblTongTien.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTongTien.setBounds(10, 95, 224, 25);
+		jp_Content_GioVe.add(lblTongTien);
+
 
 		// JPanel chứa các vé
 		jp_VeMua = new JPanel();
@@ -1016,6 +1027,9 @@ public class BanVe_GUI extends JPanel {
 						Ve_JPanel pVe = new Ve_JPanel(ve, dsVeDatTam, jp_VeMua);
 						jp_VeMua.add(pVe);
 					}
+					
+					// Cập nhật tổng tiền
+					capNhatTongTien();
 					// Điều chỉnh kích thước jp_VeMua dựa trên số lượng vé
 					jp_VeMua.setPreferredSize(new Dimension(jp_VeMua.getWidth(), dsVeDatTam.size() * 70)); // Điều chỉnh chiều cao tùy vào kích thước vé
 
@@ -1030,7 +1044,16 @@ public class BanVe_GUI extends JPanel {
 			}
 		});
 	}
-
+	// Thêm method này vào cuối class BanVe_GUI
+	private void capNhatTongTien() {
+	    float tongTien = 0;
+	    for (Ve ve : dsVeDatTam) {
+	        tongTien += ve.tinhGiaVe();
+	    }
+	    
+	    NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+	    lblTongTien.setText("Tổng tiền: " + formatter.format(tongTien));
+	}
 	private boolean isValidatedTxtField() {
 		if (!txt_GaDi.getText().equals("Nhập ga đi")) {
 			if (dsGa.stream().anyMatch(ga -> (ga.getTenGaRaw().equals(txt_GaDi.getText())))) {

@@ -64,7 +64,7 @@ public class DangNhap_GUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 905, 600);
 		setLocationRelativeTo(null);
-		setTitle("Quản lý nhà ga Eleven DUMAMAY");
+		setTitle("Quản lý nhà ga ElevenR");
 		setResizable(false);
 
 		contentPane = new JPanel() {
